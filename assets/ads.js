@@ -1,14 +1,17 @@
 /* Google AdSense for article pages. Loaded only by /writing/<slug>/ pages, never the homepage.
-   Fill in CLIENT and the slot IDs from AdSense (Ads → By ad unit). Until CLIENT is set,
-   nothing is fetched and the reserved ad boxes are removed, so the page looks as before.
+   Fill in the slot IDs from AdSense (Ads → By ad unit). A box whose slot ID is still the
+   0000000000 placeholder is removed, and if no box is left nothing is fetched.
    The AdSense script is only requested once the first ad box is close to the viewport. */
 (function () {
-  var CLIENT = 'ca-pub-XXXXXXXXXXXXXXXX'; // TODO: AdSense publisher ID
+  var CLIENT = 'ca-pub-8741162790097644';
   var SLOTS = { 'in-article': '0000000000', 'after-article': '0000000000' }; // TODO: ad unit slot IDs
 
-  var boxes = [].slice.call(document.querySelectorAll('.ad[data-ad]'));
+  var boxes = [].slice.call(document.querySelectorAll('.ad[data-ad]')).filter(function (b) {
+    if (/^[1-9]\d{9}$/.test(SLOTS[b.dataset.ad] || '')) return true;
+    b.remove();
+    return false;
+  });
   if (!boxes.length) return;
-  if (/X{16}/.test(CLIENT)) { boxes.forEach(function (b) { b.remove(); }); return; }
 
   var loaded = false;
   function load() {
