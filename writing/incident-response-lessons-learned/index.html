@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>Incident Response Lessons Learned From the Field · HarshaVardhan Aakanti</title>
+<meta name="description" content="Anonymised incident response lessons from real SOC work: the mistakes that cost time or evidence, and what I would do differently next time.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/incident-response-lessons-learned/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Incident Response Lessons Learned From the Field">
+<meta property="og:description" content="The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/incident-response-lessons-learned/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/incident-response-lessons-learned/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: a shield with a check mark beside the incident response stages detect, scope, contain, recover and review.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="Incident response">
+<meta property="article:tag" content="Incident response">
+<meta property="article:tag" content="Forensics">
+<meta property="article:tag" content="SOC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Incident Response Lessons Learned From the Field">
+<meta name="twitter:description" content="The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/incident-response-lessons-learned/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: a shield with a check mark beside the incident response stages detect, scope, contain, recover and review.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/incident-response-lessons-learned/#article","headline":"Incident response lessons learned: mistakes from the field","description":"Anonymised incident response lessons from real SOC work: the mistakes that cost time or evidence, and what I would do differently next time.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/incident-response-lessons-learned/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/incident-response-lessons-learned/","articleSection":"Incident response","keywords":["incident response lessons learned","incident response mistakes","digital forensics","session revocation","business email compromise","insider threat investigation","NIST 800-61"],"wordCount":1308,"timeRequired":"PT6M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"Incident response lessons from the field","item":"https://harshaaakanti.github.io/writing/incident-response-lessons-learned/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/incident-response-lessons-learned/#faq","mainEntity":[{"@type":"Question","name":"What are the most common incident response mistakes?","acceptedAnswer":{"@type":"Answer","text":"Resetting a password instead of revoking sessions, missing attacker persistence such as mailbox rules or new access keys, reimaging before preserving evidence, and building timelines from logs in mixed time zones."}},{"@type":"Question","name":"Should you contain an incident immediately?","acceptedAnswer":{"@type":"Answer","text":"If there is active harm, such as data leaving or ransomware spreading, yes. Otherwise a short, time-boxed scoping window first can stop the attacker falling back to a foothold you have not found yet."}},{"@type":"Question","name":"What is a blameless post-incident review?","acceptedAnswer":{"@type":"Answer","text":"A short meeting after an incident that looks at what happened, what went well and what was slow, without blaming individuals. It should end with a few specific actions, each with an owner."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Incident response</span>
+      <h1>Incident response lessons from the field</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/incident-response-lessons-learned/cover.webp" width="1200" height="630" alt="Cover illustration: a shield with a check mark beside the incident response stages detect, scope, contain, recover and review." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>Incident response playbooks are written in calm rooms. Incidents are not. Most of what I know about responding well I learned from the moments where something went slightly wrong: a step taken too early, a piece of evidence lost, a message sent to the wrong group, an assumption nobody checked.</p>
+      <p>These are some of those lessons. Every example is anonymised and generalised, with details changed or combined so that no organisation, person or case can be identified. The mistakes are real patterns, though, and I have seen most of them more than once.</p>
+
+      <h2>1. Resetting the password is not containment</h2>
+      <p>A user's account showed sign-ins from an unfamiliar location. The first response was to reset the password and close the ticket. A day later the same account was sending phishing emails internally. The attacker had never needed the password. They had a valid session token, and resetting the password did nothing to it.</p>
+      <p><strong>What I do now:</strong> for any account compromise, revoke all active sessions and refresh tokens, review and remove any newly registered MFA methods, check for OAuth app consents granted during the window, and only then reset the password. I wrote more about why in <a href="/writing/mfa-is-not-your-last-line-of-defense/">MFA is not your last line of defense</a>.</p>
+
+      <h2>2. Check for persistence before declaring victory</h2>
+      <p>In business email compromise cases the attacker's favourite trick is not the login. It is the mailbox rule: forward anything mentioning "invoice" to an external address, then move the original to an obscure folder so the user never sees the replies. Containment that removes the attacker's session but leaves the rule in place means the attacker keeps reading the mail.</p>
+      <p><strong>What I do now:</strong> I keep a persistence checklist for each incident type. For email it includes inbox rules, forwarding settings, delegates, connected apps and newly created app passwords. For cloud accounts it includes new users, access keys, roles and trust policies. For endpoints it includes scheduled tasks, services, startup items and new local accounts.</p>
+
+      <div class="callout">Containment is not done when the attacker is out. It is done when they cannot get back in.</div>
+
+      <h2>3. Scope before you act, when you can</h2>
+      <p>On one investigation, a compromised machine was isolated within minutes of the first alert. That felt like a win. But it also told the attacker we had noticed, and they quickly used a second foothold we had not found yet. The second foothold took far longer to locate than the first.</p>
+      <p><strong>What I do now:</strong> if there is active harm, such as data leaving or ransomware spreading, contain immediately. If there is not, spend a short, time-boxed window scoping first: what else did this user, host or credential touch? Then contain everything at once. It is a judgement call each time, and the important part is making it on purpose rather than by reflex.</p>
+
+      <h2>4. Preserve evidence before you clean up</h2>
+      <p>A laptop with confirmed malware was reimaged the same afternoon to get the user back to work. It was the right outcome for the user. It was the wrong order for the investigation, because the memory and disk artefacts that would have shown how the malware arrived were gone.</p>
+      <p><strong>What I do now:</strong> before any destructive remediation, capture what you will need: volatile data if the host is still running, the relevant files, and the EDR timeline. Most EDR platforms can collect this remotely in minutes. Then reimage.</p>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>5. Normalise time before building the timeline</h2>
+      <p>One timeline put the data transfer before the login that made it possible. Nobody had made an error in reading the logs. One source logged in UTC, another in local time, and a third in the time zone of the server it ran on. The story looked impossible until the clocks were aligned.</p>
+      <p><strong>What I do now:</strong> every timestamp goes into the timeline in UTC, with its original source and time zone noted. It is dull work and it prevents some of the most confusing hours in an investigation.</p>
+
+      <h2>6. One log source is a rumour, two is evidence</h2>
+      <p>In an insider-risk case, the first data suggested a departing employee had uploaded a large volume of files to personal cloud storage. It would have been easy to stop there. But a proxy log alone shows that bytes moved, not what they were or why. Correlating with endpoint file activity, the identity provider and the device record turned "probably" into a clear, defensible timeline, and it also ruled out an innocent explanation that the first source could not.</p>
+      <p><strong>What I do now:</strong> any conclusion that could affect a person's job or a legal decision gets corroborated from at least two independent sources, and the report says which claims rest on which evidence.</p>
+
+      <h2>7. Bring in HR and legal early on people cases</h2>
+      <p>Investigations involving an employee are not only technical. Whether you can review certain data, how findings are shared, and who decides what happens next are questions for HR and legal. Bringing them in late means redoing work, or worse, having evidence questioned.</p>
+      <p><strong>What I do now:</strong> as soon as an investigation points at an individual, the case follows the people-investigation process. Access to the case is limited, notes are factual and neutral, and opinions stay out of the report.</p>
+
+      <h2>8. Write it down as you go</h2>
+      <p>At the end of a long incident, nobody remembers exactly when a host was isolated, who approved a block, or which query found the second foothold. Reconstructing it afterwards is slow and error-prone.</p>
+      <p><strong>What I do now:</strong> keep a running log in the ticket from the first minute: time, action, who, and why. It costs seconds per entry and saves hours when writing the report or handing over to the next shift.</p>
+
+      <h2>9. Communicate in the right channel</h2>
+      <p>Discussing an active incident in a chat channel the attacker might be able to read, from an account that might be compromised, is a classic mistake. So is telling too many people too early, which turns a contained incident into rumours.</p>
+      <p><strong>What I do now:</strong> for serious incidents, move coordination to a separate, need-to-know channel, and assume any account involved in the incident may be watched until proven otherwise.</p>
+
+      <h2>10. The lessons-learned meeting is not optional</h2>
+      <p>The incidents that repeat are the ones nobody reviewed. A short, blameless review after each significant incident, covering what happened, what went well, what was slow and what changes, is where the real improvement comes from. The output should be a few specific actions with owners, such as a new detection, a logging fix or a playbook update, not a document nobody reads.</p>
+      <p>Frameworks like <a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener">NIST SP 800-61</a> describe this as part of the incident lifecycle for a reason. Response that does not feed back into detection and prevention just waits for the next incident.</p>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>What are the most common incident response mistakes?</strong> Resetting a password instead of revoking sessions, missing attacker persistence such as mailbox rules or new access keys, reimaging before preserving evidence, and building timelines from logs in mixed time zones.</p>
+      <p><strong>Should you contain an incident immediately?</strong> If there is active harm, such as data leaving or ransomware spreading, yes. Otherwise a short, time-boxed scoping window first can stop the attacker falling back to a foothold you have not found yet.</p>
+      <p><strong>What is a blameless post-incident review?</strong> A short meeting after an incident that looks at what happened, what went well and what was slow, without blaming individuals. It should end with a few specific actions, each with an owner.</p>
+
+      <h2>The point</h2>
+      <p>Most incident response mistakes are not about missing knowledge. They are about doing the right steps in the wrong order under pressure: acting before scoping, cleaning before preserving, resetting instead of revoking. The fix is preparation. Short checklists, a habit of writing things down and a blameless review afterwards will improve your next incident more than any new tool.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="ir">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="ir">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="ir" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="ir" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
