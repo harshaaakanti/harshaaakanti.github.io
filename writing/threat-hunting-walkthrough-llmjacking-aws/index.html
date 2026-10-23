@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>Threat Hunting Walkthrough: LLMjacking in AWS · HarshaVardhan Aakanti</title>
+<meta name="description" content="A step-by-step threat hunt: an LLMjacking hypothesis, CloudTrail queries for AI model enumeration, triage of the results and the detection that followed.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Threat Hunting Walkthrough: LLMjacking in AWS">
+<meta property="og:description" content="One hunt, start to finish: the hypothesis, the CloudTrail queries, what we found, and the detection that came out of it.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: a magnifying glass over a cloud with scattered events, one highlighted.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="Threat hunting">
+<meta property="article:tag" content="Threat hunting">
+<meta property="article:tag" content="Cloud security">
+<meta property="article:tag" content="Detection engineering">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Threat Hunting Walkthrough: LLMjacking in AWS">
+<meta name="twitter:description" content="One hunt, start to finish: the hypothesis, the CloudTrail queries, what we found, and the detection that came out of it.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: a magnifying glass over a cloud with scattered events, one highlighted.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/#article","headline":"A threat hunting walkthrough: hunting LLMjacking in AWS CloudTrail","description":"A step-by-step threat hunt: an LLMjacking hypothesis, CloudTrail queries for AI model enumeration, triage of the results and the detection that followed.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/","articleSection":"Threat hunting","keywords":["threat hunting","LLMjacking","AWS CloudTrail","Amazon Bedrock security","hypothesis-driven hunting","cloud detection","MITRE ATT&CK T1078.004"],"wordCount":1272,"timeRequired":"PT6M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"A threat hunt walkthrough, from hypothesis to detection","item":"https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/#faq","mainEntity":[{"@type":"Question","name":"What is LLMjacking?","acceptedAnswer":{"@type":"Answer","text":"LLMjacking is when attackers use stolen cloud credentials to access hosted AI models, then resell or abuse that access while the victim pays the bill."}},{"@type":"Question","name":"What is a threat hunting hypothesis?","acceptedAnswer":{"@type":"Answer","text":"It is a specific, testable statement about how an attacker might behave in your environment, such as “an attacker with valid AWS keys will enumerate AI model access before using it”. It tells you which data to look at and what would prove or disprove it."}},{"@type":"Question","name":"What should a threat hunt produce?","acceptedAnswer":{"@type":"Answer","text":"At least one of: a new or improved detection, a fixed logging gap, or a documented write-up of what was checked and why it is safe. A hunt that leaves nothing behind has to be repeated by hand next time."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Threat hunting</span>
+      <h1>A threat hunt walkthrough, from hypothesis to detection</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/threat-hunting-walkthrough-llmjacking-aws/cover.webp" width="1200" height="630" alt="Cover illustration: a magnifying glass over a cloud with scattered events, one highlighted." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>Threat hunting gets described in grand terms, but a good hunt is usually small and specific. You pick one question about how an attacker might be operating in your environment, you look for the evidence, and whatever you find, you leave behind something better than you started with: a new detection, a fixed logging gap, or a documented reason to stop worrying.</p>
+      <p>This post walks through one hunt from start to finish. The topic is LLMjacking, where attackers use stolen cloud credentials to get access to hosted AI models and then resell or abuse that access, leaving the victim with the bill. The details are generalised and contain nothing from any real environment, but the steps are the ones I follow on every hunt.</p>
+
+      <h2>Step one: start with a hypothesis</h2>
+      <p>A hunt without a hypothesis is just browsing logs. The hypothesis should be specific enough that you can prove or disprove it with data you actually have. Ours was:</p>
+      <div class="callout">If an attacker holds valid AWS credentials, they will enumerate AI model access and quotas before they start using models.</div>
+      <p>Where did that come from? Public research on LLMjacking describes a consistent pattern: attackers check whether model access is enabled, which models are available, whether invocation logging is turned on, and how much quota they can use. That recon is noisy compared to normal use, and it happens before the expensive part. It maps to <a href="https://attack.mitre.org/techniques/T1078/004/" target="_blank" rel="noopener">MITRE ATT&amp;CK T1078.004, Valid Accounts: Cloud Accounts</a>, followed by discovery activity.</p>
+
+      <h2>Step two: check you can see it</h2>
+      <p>Before writing a single query, confirm the data exists. For this hunt that meant answering three questions:</p>
+      <ul>
+        <li><strong>Is CloudTrail enabled in every account and region,</strong> including regions you do not normally use? Attackers like quiet regions.</li>
+        <li><strong>Are management events for the AI service captured?</strong> Enumeration calls such as listing foundation models are management events and show up in CloudTrail by default.</li>
+        <li><strong>Is model invocation logging configured?</strong> If not, you can see that models were accessed but not what was sent. That is a finding in itself.</li>
+      </ul>
+      <p>A hunt that discovers a logging gap has not failed. It has found the most important thing it could have found.</p>
+
+      <h2>Step three: write the first query broadly</h2>
+      <p>Start wide and narrow down. The first query pulls every call to the AI service's discovery and configuration APIs over the last 90 days, grouped by identity and source.</p>
+      <pre class="log" style="margin:0 0 1.3rem">source = cloudtrail
+eventName IN (ListFoundationModels, GetFoundationModelAvailability,
+              GetModelInvocationLoggingConfiguration,
+              ListFoundationModelAgreementOffers, GetUseCaseForModelAccess)
+| stats count, dc(awsRegion) AS regions, values(sourceIPAddress)
+        BY userIdentity.arn, userAgent
+| sort - count</pre>
+      <p>The syntax above is generic pseudocode. Translate it into whatever query language your SIEM uses. The idea is what matters: who is asking about model access, from where, with what tool, across how many regions.</p>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>Step four: separate normal from interesting</h2>
+      <p>The first results are mostly legitimate. Your own platform team, infrastructure-as-code pipelines and internal AI projects all call these APIs. The work now is building a picture of normal so the outliers stand out. We looked for identities with any of these traits:</p>
+      <ul>
+        <li><strong>Discovery calls across many regions in a short window,</strong> which looks like someone checking where access is enabled.</li>
+        <li><strong>Calls from long-lived access keys</strong> rather than roles assumed through single sign-on.</li>
+        <li><strong>A user agent that does not match how the team normally works,</strong> such as a scripting library on an account that only ever uses the console.</li>
+        <li><strong>Source IPs outside known corporate and cloud ranges,</strong> especially hosting providers and anonymising networks.</li>
+        <li><strong>Discovery followed by quota checks</strong> or invocation attempts that fail validation, which some tools use to probe access cheaply.</li>
+        <li><strong>Any of this from the root user,</strong> which should almost never happen.</li>
+      </ul>
+      <p>A second query joined these traits with the identity's history: has this key or role ever called the AI service before? First-time use is not malicious on its own, but first-time use combined with multi-region discovery and an unusual source is worth a closer look.</p>
+
+      <h2>Step five: investigate what turns up</h2>
+      <p>In a hunt like this the outcomes usually fall into three buckets. Most hits are explained quickly: a new internal project, a developer testing from home, an automation account doing exactly what it was built to do. A few need a conversation with the owner to confirm. Occasionally one matches the pattern closely, with root or long-lived credentials, many regions, an unfamiliar source and no matching project, and becomes an incident.</p>
+      <p>When that happens, the hunt hands over to incident response. Rotate or disable the credentials, review everything else that identity did, check for new users, keys or roles created as persistence, and look at billing for unexpected model usage. Hunting finds it; response contains it.</p>
+
+      <h2>Step six: turn the hunt into a detection</h2>
+      <p>The most valuable output of a hunt is usually not the finding. It is the detection you write afterwards, so you never have to hunt for the same thing by hand again. From this hunt, the detection logic became:</p>
+      <ul>
+        <li>Alert when an identity makes AI service discovery calls in three or more regions within an hour.</li>
+        <li>Raise severity if the identity is the root user, uses a long-lived access key, or calls from outside known ranges.</li>
+        <li>Raise severity again if discovery is followed by changes to model access agreements, quota requests or invocation attempts.</li>
+        <li>Exclude only the specific roles used by approved platform pipelines, each with an owner and a review date.</li>
+      </ul>
+      <p>We back-tested this against the 90 days of data from the hunt before switching it on, to check it caught the patterns we cared about without flooding the queue.</p>
+
+      <h2>Step seven: write it up</h2>
+      <p>Every hunt gets a short write-up, even the ones that find nothing. Mine always cover the same things: the hypothesis, the data sources and any gaps, the queries, what was found and how it was resolved, the detections or logging changes that came out of it, and ideas for the next hunt. Over time these become a library. New analysts learn from them, and the next hunter does not start from zero.</p>
+
+      <h2>Lessons from hunts like this</h2>
+      <ul>
+        <li><strong>Hunt where the money goes.</strong> AI model access is expensive and easy to resell, so it attracts attackers. Follow the incentive.</li>
+        <li><strong>Treat logging gaps as findings.</strong> Missing invocation logs or an unmonitored region is worth fixing even if the hunt finds nothing else.</li>
+        <li><strong>Baseline before you judge.</strong> Most "suspicious" activity in a first query is your own engineers.</li>
+        <li><strong>Always leave something behind.</strong> A detection, a fixed gap or a write-up. Otherwise the hunt was just a long afternoon.</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>What is LLMjacking?</strong> LLMjacking is when attackers use stolen cloud credentials to access hosted AI models, then resell or abuse that access while the victim pays the bill.</p>
+      <p><strong>What is a threat hunting hypothesis?</strong> It is a specific, testable statement about how an attacker might behave in your environment, such as “an attacker with valid AWS keys will enumerate AI model access before using it”. It tells you which data to look at and what would prove or disprove it.</p>
+      <p><strong>What should a threat hunt produce?</strong> At least one of: a new or improved detection, a fixed logging gap, or a documented write-up of what was checked and why it is safe. A hunt that leaves nothing behind has to be repeated by hand next time.</p>
+
+      <h2>The point</h2>
+      <p>Threat hunting is not about being clever. It is a disciplined loop: a specific hypothesis, data you have checked, broad queries narrowed by context, honest investigation, and a detection at the end. Run that loop regularly on the attacks that matter most to your business and your detections improve every month, whether or not any single hunt finds an attacker.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="hunt">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="hunt">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="hunt" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="hunt" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
