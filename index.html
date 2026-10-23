@@ -82,11 +82,11 @@ a:hover{text-decoration:underline}
 /* hero */
 .hero{position:relative;border-bottom:1px solid var(--line);overflow:hidden;background:radial-gradient(ellipse 70% 60% at 70% 45%,rgba(130,210,230,.07),transparent 70%),var(--ink)}
 #funnel{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero .wrap{position:relative;padding-block:clamp(4rem,10vw,8rem) clamp(3rem,7vw,5.5rem);display:grid;gap:var(--s3)}
+.hero .wrap{position:relative;padding-block:clamp(4rem,10vw,8rem) clamp(3rem,7vw,5.5rem);display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3)}
 .status{display:inline-flex;align-items:center;gap:.6rem;font:500 .74rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--line);background:rgba(17,23,38,.7);padding:.55rem .8rem;border-radius:2px;width:max-content;max-width:100%}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 0 var(--cyan);animation:ping 2.4s infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(130,210,230,.6)}80%,100%{box-shadow:0 0 0 10px rgba(130,210,230,0)}}
-h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.9rem,6vw,4.4rem);line-height:1.08;letter-spacing:.01em;margin:0;text-wrap:balance;max-width:16ch}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.65rem,6vw,4.4rem);line-height:1.08;letter-spacing:.01em;margin:0;text-wrap:balance;max-width:16ch}
 h1 em{font-style:normal;color:var(--gold)}
 .lede{font-size:clamp(1.05rem,1.6vw,1.25rem);color:#C7CCD8;max-width:60ch;margin:0}
 .roles{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}
@@ -95,6 +95,10 @@ h1 em{font-style:normal;color:var(--gold)}
 .btn{display:inline-flex;align-items:center;gap:.5rem;font:600 .85rem/1 var(--f-body);letter-spacing:.04em;padding:.9rem 1.2rem;border-radius:2px;border:1px solid var(--gold);color:var(--ink);background:var(--gold);transition:transform .2s,background .2s}
 .btn:hover{text-decoration:none;transform:translateY(-2px)}
 .btn.ghost{background:transparent;color:var(--gold)}
+.btn:not(.ghost){box-shadow:0 0 0 1px var(--gold),0 6px 22px rgba(0,0,0,.35)}
+.cta-more{margin:0;font:500 .8rem/1.4 var(--f-mono);color:var(--muted)}
+.cta-more a{color:var(--fg)}
+@media (max-width:430px){.cta .btn{flex:1 1 100%;justify-content:center}}
 
 /* metrics strip */
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
@@ -229,18 +233,18 @@ footer .wrap{padding-block:var(--s4);display:flex;flex-wrap:wrap;justify-content
   <canvas id="funnel" aria-hidden="true"></canvas>
   <div class="wrap">
     <span class="status"><span class="dot" aria-hidden="true"></span>SOC online · triage automated</span>
-    <h1>HarshaVardhan Aakanti. I build the <em>machinery</em> that lets a lean SOC scale.</h1>
+    <h1>HarshaVardhan Aakanti.<br> I build the <em>machinery</em> that lets a lean SOC scale.</h1>
     <p class="lede">Information Security Analyst working at the meeting point of detection engineering, SOAR automation and enterprise AI. Alerts come in noisy; they leave enriched, triaged and owned end to end.</p>
     <ul class="roles" aria-label="Focus areas">
       <li>AI-driven SOC</li><li>Detection engineering</li><li>Threat hunting</li><li>Incident response</li><li>Security automation</li>
     </ul>
     <div class="cta">
-      <a class="btn" href="#skills">Explore skills</a>
-      <a class="btn ghost" href="#cases">Read case files</a>
-      <a class="btn ghost" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener me">
+      <a class="btn" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener me">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-3.95z"/></svg>
         Connect on LinkedIn</a>
+      <a class="btn ghost" href="/writing/">Explore writing</a>
     </div>
+    <p class="cta-more">Or jump to <a href="#skills">skills</a> · <a href="#cases">case files</a></p>
   </div>
 </header>
 
