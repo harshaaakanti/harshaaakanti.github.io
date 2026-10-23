@@ -1,4 +1,8 @@
 /* Shared styles for secondary pages (writing, 404). Mirrors the homepage tokens. */
+@font-face{font-family:"Michroma";font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/michroma-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(/assets/fonts/ibm-plex-sans-400-600.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/ibm-plex-mono-500.woff2) format("woff2")}
 :root{
   --ink:#0A0E18; --panel:#111726; --panel-2:#161E30; --line:#24304A;
   --fg:#E7E9EF; --soft:#C7CCD8; --muted:#8E97AB; --gold:#D9B46C; --cyan:#82D2E6;
