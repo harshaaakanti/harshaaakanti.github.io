@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>From Bug Bounty to Blue Team: Lessons for Defenders · HarshaVardhan Aakanti</title>
+<meta name="description" content="What three years of bug bounty hunting taught me about SOC defence: thinking in attack paths, reading alerts like an intruder, and what to unlearn.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="From Bug Bounty to Blue Team: Lessons for Defenders">
+<meta property="og:description" content="What three years of hunting bugs taught me about catching attackers, and what I had to unlearn.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: an offensive crosshair with an arrow pointing to a defensive shield.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="Career">
+<meta property="article:tag" content="Career">
+<meta property="article:tag" content="Offensive security">
+<meta property="article:tag" content="Blue team">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="From Bug Bounty to Blue Team: Lessons for Defenders">
+<meta name="twitter:description" content="What three years of hunting bugs taught me about catching attackers, and what I had to unlearn.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: an offensive crosshair with an arrow pointing to a defensive shield.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/#article","headline":"From bug bounty to blue team: what offensive security teaches defenders","description":"What three years of bug bounty hunting taught me about SOC defence: thinking in attack paths, reading alerts like an intruder, and what to unlearn.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/","articleSection":"Career","keywords":["offensive security to blue team","bug bounty to SOC","red team vs blue team","purple teaming","security career","SOC analyst","attacker mindset"],"wordCount":1224,"timeRequired":"PT5M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"From offensive security to blue team","item":"https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/#faq","mainEntity":[{"@type":"Question","name":"Do you need offensive experience to be a good defender?","acceptedAnswer":{"@type":"Answer","text":"No. Plenty of excellent defenders have never done a pentest. But spending some time breaking things, even in labs, makes you much faster at recognising what an attack looks like in real logs."}},{"@type":"Question","name":"Is moving from red to blue a step down?","acceptedAnswer":{"@type":"Answer","text":"Not at all. Defence is harder in some ways: an attacker needs one path in, while a defender has to watch all of them, every day. The skills are complementary, and many people move back and forth during a career."}},{"@type":"Question","name":"What is purple teaming?","acceptedAnswer":{"@type":"Answer","text":"It is offensive and defensive people working together in the open. One side runs a technique, the other watches what their tools see, and both improve the detection on the spot."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Career</span>
+      <h1>From offensive security to blue team</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/from-offensive-security-to-blue-team/cover.webp" width="1200" height="630" alt="Cover illustration: an offensive crosshair with an arrow pointing to a defensive shield." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>Before I worked in a SOC, I spent about three years on the other side, hunting web application vulnerabilities on public and private bug bounty programs. My job was to find the one thing a team had missed, prove it, and write it up well enough that someone would fix it. Then I moved to defence, where the job is closer to the reverse: notice the one thing an attacker did that does not fit.</p>
+      <p>People often ask whether that background helps. It does, enormously, though not always in the ways they expect. Here is what transferred, what I had to unlearn, and what I would tell anyone thinking about making the same move.</p>
+
+      <h2>Lesson 1: attackers think in paths, not alerts</h2>
+      <p>As a bug hunter I never thought about a single vulnerability in isolation. A low-severity information leak was interesting because of what it unlocked: an internal hostname, a user ID format, an API endpoint that should not be public. Chain three small things and you had something serious.</p>
+      <p>Attackers in a real network work the same way. Initial access, discovery, credential theft, lateral movement, collection, exfiltration. Each step on its own might produce a low-severity alert that looks harmless. The defender who only reads alerts one at a time misses the story. The defender who asks "if this were the first step, what would the next one be?" finds it.</p>
+
+      <div class="callout">An alert is a single frame. An attacker is making a film.</div>
+
+      <h2>Lesson 2: read alerts like an intruder would</h2>
+      <p>When I look at an alert now, my first question is not "is this rule right?" It is "if I were the attacker, why would I have done this?" A PowerShell command makes sense or does not depending on what an intruder would gain from it. A login from a new location matters more if that account has access worth stealing.</p>
+      <p>That habit makes triage faster in both directions. Some alerts that look alarming make no sense as attacker behaviour, and you can close them with confidence. Others that look routine suddenly make a lot of sense, and you look harder.</p>
+
+      <h2>Lesson 3: every control has an edge</h2>
+      <p>Bug bounty teaches you that every control has a boundary, and the interesting bugs live right on it. Input validation that covers one parameter but not the next. Authorisation checked on the page but not on the API behind it. Rate limiting on login but not on password reset.</p>
+      <p>Defensive controls have edges too. MFA protects the login but not a stolen session, which is why I wrote <a href="/writing/mfa-is-not-your-last-line-of-defense/">MFA is not your last line of defense</a>. EDR covers managed laptops but not the contractor's personal device. A detection catches the common tool but not the renamed copy. Offensive experience trains you to look for the edge of every control you rely on, and to ask what happens just beyond it.</p>
+
+      <h2>Lesson 4: proof beats opinion</h2>
+      <p>A bug bounty report without a working proof of concept is usually closed. You learn quickly to show, not tell: exact steps, exact requests, exact impact. That discipline translates directly into incident reports and detection proposals. "This looks suspicious" gets ignored. "Here is the timeline, here are the three log entries that prove it, and here is what the attacker could reach next" gets action.</p>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>What I had to unlearn</h2>
+      <p>Not everything transfers. A few offensive habits work against you on the blue side.</p>
+      <ul>
+        <li><strong>Depth over breadth.</strong> Bug hunting rewards going very deep on one target for days. A SOC shift needs you to handle many alerts well, not one perfectly. Knowing when an alert has had enough attention is a skill I had to build.</li>
+        <li><strong>Working alone.</strong> Bug bounty is mostly solo. Defence is a team sport with handovers, shared queues and on-call rotations. Writing for the next analyst matters as much as finding the issue.</li>
+        <li><strong>Focusing on the clever.</strong> Offensive work celebrates the novel bypass. Most real intrusions use boring techniques: phishing, stolen credentials, unpatched services. Defenders win by doing the boring things consistently.</li>
+        <li><strong>Thinking about the finding, not the business.</strong> In bounty work, impact is a severity score. In a company, impact is a conversation about risk, cost and timing with people who are not security specialists.</li>
+      </ul>
+
+      <h2>Why rotations help</h2>
+      <p>One thing that helped me bridge the two worlds was an internship that rotated through every team reporting to the security leadership: the SOC, threat and vulnerability management, application security, security architecture and product security incident response. Seeing how each team worked, and how a vulnerability moves from discovery to fix to detection, made it much clearer where an attacker's mindset adds the most value on defence.</p>
+      <p>If your organisation offers rotations, take them. If it does not, ask to shadow the teams next to yours for a week. You will understand your own job better.</p>
+
+      <h2>How defenders can borrow the offensive mindset</h2>
+      <p>You do not need a bug bounty background to think like an attacker. A few practical ways to build it:</p>
+      <ul>
+        <li><strong>Walk through ATT&amp;CK for your own environment.</strong> Pick a technique from <a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK</a>, then ask how an attacker would do it here, and what you would see if they did.</li>
+        <li><strong>Practise on deliberately vulnerable labs.</strong> Breaking things in a safe environment teaches you what the logs look like when it happens for real.</li>
+        <li><strong>Run purple-team exercises.</strong> Have someone run a technique while defenders watch the telemetry live. Gaps show up within minutes.</li>
+        <li><strong>Read offensive write-ups.</strong> Bug bounty reports and red team blogs are free lessons in how controls fail.</li>
+        <li><strong>Ask "what next?" on every alert.</strong> If this were real, what would the attacker do in the next ten minutes, and would we see it?</li>
+      </ul>
+
+      <h2>Advice for anyone moving from red to blue</h2>
+      <ul>
+        <li>Learn the logs. You know how attacks work; now learn what they look like in a SIEM and an EDR timeline.</li>
+        <li>Learn the business. Find out what the organisation actually cares about protecting. That is where attackers will go.</li>
+        <li>Turn your findings into detections. Every technique you know how to perform is a detection you can write.</li>
+        <li>Keep your offensive skills sharp. They are your advantage, and they fade if you never use them.</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>Do you need offensive experience to be a good defender?</strong> No. Plenty of excellent defenders have never done a pentest. But spending some time breaking things, even in labs, makes you much faster at recognising what an attack looks like in real logs.</p>
+      <p><strong>Is moving from red to blue a step down?</strong> Not at all. Defence is harder in some ways: an attacker needs one path in, while a defender has to watch all of them, every day. The skills are complementary, and many people move back and forth during a career.</p>
+      <p><strong>What is purple teaming?</strong> It is offensive and defensive people working together in the open. One side runs a technique, the other watches what their tools see, and both improve the detection on the spot.</p>
+
+      <h2>The point</h2>
+      <p>Offence and defence are not opposite careers. They are two views of the same problem. Offensive work teaches you how systems fail; defensive work teaches you how to notice failure at scale and respond to it calmly. The best defenders I know can switch between those views quickly, reading an alert as an attacker would, then acting on it as a defender must.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="red-blue">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="red-blue">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="red-blue" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="red-blue" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
