@@ -40,7 +40,33 @@
     <h1>Writing</h1>
     <p class="lede">Articles and thoughts on cybersecurity, technology and whatever else I am exploring.</p>
   </header>
-  <ul class="wrap posts">
+  <form class="wrap finder" id="finder" role="search" aria-label="Find articles" hidden>
+    <div class="field grow">
+      <label for="f-q">Search</label>
+      <input id="f-q" name="q" type="search" placeholder="Title, topic or keyword" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="f-tag">Topic</label>
+      <select id="f-tag" name="tag"><option value="">All topics</option></select>
+    </div>
+    <div class="field">
+      <label for="f-year">Year</label>
+      <select id="f-year" name="year"><option value="">All years</option></select>
+    </div>
+    <div class="field">
+      <label for="f-sort">Sort</label>
+      <select id="f-sort" name="sort"><option value="new">Newest first</option><option value="old">Oldest first</option></select>
+    </div>
+    <div class="field">
+      <label for="f-per">Per page</label>
+      <select id="f-per" name="per"><option>5</option><option selected>10</option><option>20</option><option>50</option></select>
+    </div>
+    <div class="finder-bar">
+      <p id="f-status" class="status" role="status" aria-live="polite"></p>
+      <button type="reset" class="linkish" id="f-clear">Clear filters</button>
+    </div>
+  </form>
+  <ul class="wrap posts" id="posts">
     <li><a href="/writing/mfa-is-not-your-last-line-of-defense/">
       <time datetime="2026-10-16">16 Oct 2026</time>
       <div><h2>MFA is not your last line of defense</h2>
@@ -54,7 +80,10 @@
       <ul class="tags"><li>SOC automation</li><li>MCP</li><li>AI security</li></ul></div>
     </a></li>
   </ul>
+  <p class="wrap empty" id="f-empty" hidden>No articles match. <button type="button" class="linkish" id="f-empty-clear">Clear filters</button></p>
+  <nav class="wrap pager" id="pager" aria-label="Pagination" hidden></nav>
 </main>
+<script src="/assets/writing.js" defer></script>
 
 <footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener me">LinkedIn ↗</a></span></div></footer>
 </body>
