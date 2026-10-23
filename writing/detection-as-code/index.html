@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>Detection as Code: Git, Tests and CI for SIEM Rules · HarshaVardhan Aakanti</title>
+<meta name="description" content="A practical guide to detection as code: SIEM rules in Git, tests against sample logs, peer review in pull requests and deployment through CI.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/detection-as-code/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Detection as Code: Git, Tests and CI for SIEM Rules">
+<meta property="og:description" content="Version control, tests, review and CI for detection rules, and why it makes a SOC faster and safer.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/detection-as-code/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/detection-as-code/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: a Git branch graph above validate, test and deploy pipeline steps.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="Detection engineering">
+<meta property="article:tag" content="Detection engineering">
+<meta property="article:tag" content="Detection as code">
+<meta property="article:tag" content="CI/CD">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Detection as Code: Git, Tests and CI for SIEM Rules">
+<meta name="twitter:description" content="Version control, tests, review and CI for detection rules, and why it makes a SOC faster and safer.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/detection-as-code/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: a Git branch graph above validate, test and deploy pipeline steps.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/detection-as-code/#article","headline":"Detection as code: version control, testing and CI for SIEM rules","description":"A practical guide to detection as code: SIEM rules in Git, tests against sample logs, peer review in pull requests and deployment through CI.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/detection-as-code/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/detection-as-code/","articleSection":"Detection engineering","keywords":["detection as code","SIEM rules in Git","Sigma rules","detection engineering","detection testing","CI/CD for security","SOC"],"wordCount":1240,"timeRequired":"PT5M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"Detection-as-code: treating detection rules like software","item":"https://harshaaakanti.github.io/writing/detection-as-code/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/detection-as-code/#faq","mainEntity":[{"@type":"Question","name":"Do I need Sigma to do detection-as-code?","acceptedAnswer":{"@type":"Answer","text":"No. Sigma helps if you want rules that are portable between SIEMs, but storing rules in your SIEM's own query language with a metadata file works just as well. The practices matter more than the format."}},{"@type":"Question","name":"What about rules that come from a vendor?","acceptedAnswer":{"@type":"Answer","text":"Keep them out of your repository but track which ones you have enabled, and put any local exclusions you add to them under the same review process as your own rules."}},{"@type":"Question","name":"How many tests does a rule need?","acceptedAnswer":{"@type":"Answer","text":"Start with one positive and one negative sample. Add a regression case every time the rule produces a false positive you fix. Over time the tests grow with the rule's history."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Detection engineering</span>
+      <h1>Detection-as-code: treating detection rules like software</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/detection-as-code/cover.webp" width="1200" height="630" alt="Cover illustration: a Git branch graph above validate, test and deploy pipeline steps." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>In a lot of SOCs, detection rules live only inside the SIEM. Someone writes a rule in the web console, saves it and moves on. Months later nobody knows who changed it, why a strange exclusion was added, or whether it still catches what it was built to catch. When it stops firing, nobody notices, because silence looks exactly like safety.</p>
+      <p>Detection-as-code is the fix. It means treating detection rules the way engineers treat software: stored in version control, reviewed before they ship, tested automatically and deployed by a pipeline. None of the ideas are new. Applying them to detections is what makes the difference.</p>
+
+      <div class="callout">If a rule can change without review, it can break without anyone noticing.</div>
+
+      <h2>What detection-as-code actually means</h2>
+      <p>It comes down to four practices:</p>
+      <ul>
+        <li><strong>Version control.</strong> Every rule is a file in a Git repository. The repository, not the SIEM console, is the source of truth.</li>
+        <li><strong>Peer review.</strong> Changes go through pull requests, so a second person reads the logic, the exclusions and the reasoning before anything ships.</li>
+        <li><strong>Automated testing.</strong> Each rule has test cases: sample events it must match and sample events it must not.</li>
+        <li><strong>Automated deployment.</strong> A CI pipeline validates the rules, runs the tests and pushes approved changes to the SIEM. Nobody edits production rules by hand.</li>
+      </ul>
+
+      <h2>What a rule looks like as code</h2>
+      <p>The format matters less than the habit. Some teams store rules in their SIEM's native query language with a small metadata file next to each one. Others write rules in <a href="https://github.com/SigmaHQ/sigma" target="_blank" rel="noopener">Sigma</a>, an open, vendor-neutral format, and convert them for the SIEM in the pipeline. Here is a simplified example in a Sigma-style layout:</p>
+      <pre class="log" style="margin:0 0 1.3rem">title: Encoded PowerShell launched by an Office application
+id: 7c1d2a4e-0000-4000-8000-000000000001
+status: stable
+description: Office apps rarely start PowerShell with an encoded
+  command. Common in malicious document payloads.
+author: SOC detection engineering
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+tags:
+  - attack.execution
+  - attack.t1059.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  parent:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\outlook.exe'
+  child:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - ' -enc '
+      - ' -encodedcommand '
+  condition: parent and child
+falsepositives:
+  - Rare legitimate add-ins; review and document any exclusion
+level: high</pre>
+      <p>Notice what comes along with the logic: an ID, a description of why the behaviour is suspicious, the ATT&amp;CK technique it maps to, known false positives and a severity. That metadata is what lets a new analyst understand the rule at 3 a.m. without asking anyone.</p>
+
+      <h2>Organising the repository</h2>
+      <p>A simple structure works well and scales further than you would expect:</p>
+      <ul>
+        <li><strong>rules/</strong>, grouped by log source or ATT&amp;CK tactic, one file per rule.</li>
+        <li><strong>tests/</strong>, with a folder per rule holding sample events that should and should not match.</li>
+        <li><strong>exclusions/</strong>, kept separate from rule logic, each with an owner, a reason and an expiry date.</li>
+        <li><strong>pipeline/</strong>, with the scripts that validate, convert, test and deploy.</li>
+      </ul>
+      <p>Keeping exclusions separate is a small decision with a big payoff. It makes every suppression visible in one place, and it lets you review them on a schedule instead of finding them buried inside rule logic years later.</p>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>Testing detections</h2>
+      <p>Testing is where detection-as-code earns its keep. A rule test is simple: feed the rule a set of events and check the result. Each rule should have at least:</p>
+      <ul>
+        <li><strong>True positive samples,</strong> real or simulated events of the attack behaviour. The rule must match all of them.</li>
+        <li><strong>True negative samples,</strong> normal activity that looks similar. The rule must match none of them.</li>
+        <li><strong>Regression cases,</strong> added every time a false positive is fixed, so the same noise never comes back.</li>
+      </ul>
+      <p>Sample events can come from sanitised production logs, from lab detonations or from attack simulation frameworks. Strip anything sensitive before committing it. Hostnames, usernames and internal addresses do not belong in a test fixture.</p>
+      <p>Beyond unit tests, the pipeline can run broader checks: does the query parse? Does it reference fields that actually exist in the log source? Is it fast enough to run on schedule without timing out? Does it duplicate an existing rule?</p>
+
+      <h2>The CI pipeline</h2>
+      <p>The pipeline runs on every pull request and again on merge. A typical flow looks like this:</p>
+      <div class="flow" role="list">
+        <div role="listitem"><b>01 · VALIDATE</b><span>Lint the rule, check required metadata, confirm the query parses and fields exist.</span></div>
+        <div role="listitem"><b>02 · TEST</b><span>Run the rule against its positive and negative samples. Back-test against recent data for volume.</span></div>
+        <div role="listitem"><b>03 · DEPLOY</b><span>After review and merge, push the rule to the SIEM through its API and record the version deployed.</span></div>
+      </div>
+      <p>A useful addition is a volume check on recent production data. If a change would have produced hundreds of alerts yesterday, the reviewer should know that before approving it, not after the queue fills up.</p>
+
+      <h2>What changes for the team</h2>
+      <ul>
+        <li><strong>Every rule has a history.</strong> When an alert looks wrong, you can see exactly who changed what and why.</li>
+        <li><strong>Rollback is one click.</strong> A bad deployment is reverted like any other code change.</li>
+        <li><strong>Review spreads knowledge.</strong> Junior analysts learn detection logic by reviewing it, and seniors catch broad exclusions before they ship.</li>
+        <li><strong>Coverage becomes measurable.</strong> With ATT&amp;CK tags on every rule, you can map what you detect and where the gaps are.</li>
+        <li><strong>Silent failures surface.</strong> A test that fails after a log source changes its format tells you the rule is broken before an attacker does.</li>
+      </ul>
+
+      <h2>Getting started without boiling the ocean</h2>
+      <p>You do not need to migrate every rule on day one. A gradual path works better:</p>
+      <ul>
+        <li>Export your existing custom rules into a repository as they are. That alone gives you history from today.</li>
+        <li>Agree a metadata template and require it for new and changed rules.</li>
+        <li>Add tests to your ten most important rules first, then to any rule you touch.</li>
+        <li>Automate deployment last, once the team trusts the repository as the source of truth.</li>
+        <li>Lock down direct editing in the SIEM console once the pipeline is reliable, with a documented break-glass process for emergencies.</li>
+      </ul>
+
+      <h2>Common objections</h2>
+      <p><strong>"It slows us down."</strong> A pull request adds minutes. Debugging an untracked rule change during an incident costs hours. In practice teams ship detections faster once deployment is automated, because nobody has to copy and paste between environments.</p>
+      <p><strong>"Our analysts aren't developers."</strong> They do not need to be. Writing a YAML file and opening a pull request is a skill that takes an afternoon to learn, and it is one of the most useful things a junior analyst can pick up.</p>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>Do I need Sigma to do detection-as-code?</strong> No. Sigma helps if you want rules that are portable between SIEMs, but storing rules in your SIEM's own query language with a metadata file works just as well. The practices matter more than the format.</p>
+      <p><strong>What about rules that come from a vendor?</strong> Keep them out of your repository but track which ones you have enabled, and put any local exclusions you add to them under the same review process as your own rules.</p>
+      <p><strong>How many tests does a rule need?</strong> Start with one positive and one negative sample. Add a regression case every time the rule produces a false positive you fix. Over time the tests grow with the rule's history.</p>
+
+      <h2>The point</h2>
+      <p>Detections are code whether you treat them that way or not. They have logic, dependencies and bugs. Version control, review, tests and a deployment pipeline will not write better detections for you, but they make sure the good ones stay good, the bad changes get caught and every rule can explain itself.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="dac">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="dac">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="dac" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="dac" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
