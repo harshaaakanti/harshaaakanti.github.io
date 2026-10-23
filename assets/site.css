@@ -89,6 +89,7 @@ h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.7rem,4.6vw,2.8
 .actions{display:flex;flex-wrap:wrap;gap:.75rem}
 
 footer{border-top:1px solid var(--line);margin-top:3rem}
+.foot-links{display:flex;gap:1.4rem;flex-wrap:wrap}
 footer .wrap{padding-block:2rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;font:400 .8rem/1.5 var(--f-mono);color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
