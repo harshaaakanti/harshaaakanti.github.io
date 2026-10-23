@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E18">
+<title>MFA Is Not Your Last Line of Defense · HarshaVardhan Aakanti</title>
+<meta name="description" content="Info-stealers lift session cookies and OAuth tokens, so attackers skip the login and MFA entirely. What SOC teams should detect and change instead.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MFA Is Not Your Last Line of Defense">
+<meta property="og:description" content="MFA protects the login. Attackers are skipping the login. What actually moves the needle against session hijacking.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/">
+<meta property="og:image" content="https://harshaaakanti.github.io/assets/og-image.png">
+<meta property="article:published_time" content="2026-10-16">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"MFA Is Not Your Last Line of Defense","datePublished":"2026-10-16","author":{"@type":"Person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/"},"image":"https://harshaaakanti.github.io/assets/og-image.png","mainEntityOfPage":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/","keywords":["session hijacking","info-stealer","MFA","identity security","detection engineering","incident response"]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Identity security</span>
+      <h1>MFA is not your last line of defense</h1>
+      <div class="meta"><time datetime="2026-10-16">16 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <div class="wrap narrow prose">
+      <p>For years the advice was simple: turn on MFA and you are safe. Leadership checked the box, auditors signed off, and everyone relaxed. In 2026 that advice is incomplete for most organizations, because attackers have largely stopped caring about passwords.</p>
+
+      <div class="callout">MFA protects the login. Attackers are skipping the login.</div>
+
+      <h2>What I keep seeing from the SOC floor</h2>
+      <p>The pattern is consistent, and it never touches a login page:</p>
+      <div class="flow" role="list">
+        <div role="listitem"><b>01 · INFECT</b><span>Info-stealer malware lands on a personal or unmanaged device.</span></div>
+        <div role="listitem"><b>02 · HARVEST</b><span>It grabs live session cookies and OAuth tokens, not only passwords.</span></div>
+        <div role="listitem"><b>03 · REPLAY</b><span>The attacker replays the session. No password prompt, no MFA challenge.</span></div>
+      </div>
+      <p>A stolen session cookie is a fully authenticated user. Most organizations have no detection for it, because from the identity provider's point of view nothing failed. There was no bad password and no denied push. The session simply kept working from somewhere new.</p>
+
+      <h2>Why this slips past most controls</h2>
+      <p>Most identity alerting is built around authentication events: failed logins, MFA fatigue, password sprays. Session replay produces none of those. The activity shows up later, in the application logs, as normal use by a legitimate account. If your detections only watch the front door, a replayed token walks straight past them.</p>
+
+      <h2>What actually moves the needle</h2>
+      <ul>
+        <li><strong>Shorten session lifetimes</strong> and use token binding wherever your applications support it, so a stolen token expires quickly or fails off the original device.</li>
+        <li><strong>Detect session reuse</strong> from a new ASN, a new device fingerprint, or an impossible-travel pattern within the same session, not only across logins.</li>
+        <li><strong>Treat info-stealer log monitoring as a core control.</strong> If your users' cookies are being sold, you want to know before they are used.</li>
+        <li><strong>Revoke sessions during incident response,</strong> not just reset passwords. A password reset does nothing to a token that is already valid.</li>
+      </ul>
+
+      <h2>The point</h2>
+      <p>MFA is not useless. It still stops a large share of credential attacks, and you should keep it. But if it is your last line of defense, you do not really have one. The useful question for a security team is not "what is our MFA adoption rate?" It is "would we notice if a valid session started working from somewhere it shouldn't?"</p>
+    </div>
+
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener me">Discuss on LinkedIn</a>
+    </footer>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><a href="/">harshaaakanti.github.io</a></div></footer>
+</body>
+</html>
