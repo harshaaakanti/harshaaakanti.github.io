@@ -1,4 +1,4 @@
-/* Google ad blocking recovery message (Funding Choices) for article pages.
+/* Google ad blocking recovery message (Funding Choices) for blog pages (/writing/ and articles).
    Kept out of ads.js so blocklists that match "ads" don't stop it. Like ads.js, it only
    loads once the first ad box is close to the viewport. */
 (function () {
