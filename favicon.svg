@@ -1,7 +1,5 @@
-<svg id="s" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-<rect width="512" height="512" fill="#0A0E18"/>
-<circle cx="256" cy="256" r="196" fill="none" stroke="#82D2E6" stroke-opacity=".35" stroke-width="6"/>
-<path d="M256 452 A196 196 0 0 1 60 256" fill="none" stroke="#D9B46C" stroke-width="10" stroke-linecap="round"/>
-<path d="M256 112 L360 152 V240 C360 318 314 368 256 392 C198 368 152 318 152 240 V152 Z" fill="none" stroke="#D9B46C" stroke-width="18" stroke-linejoin="round"/>
-<circle cx="256" cy="250" r="22" fill="#D9B46C"/>
-</svg></body></html>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<rect width="64" height="64" rx="12" fill="#0A0E18"/>
+<path d="M32 10 L50 17 V31 C50 43 42 51 32 55 C22 51 14 43 14 31 V17 Z" fill="none" stroke="#D9B46C" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="32" cy="31" r="5" fill="#D9B46C"/>
+</svg>
