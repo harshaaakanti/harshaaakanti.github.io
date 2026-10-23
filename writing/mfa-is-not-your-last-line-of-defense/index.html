@@ -62,6 +62,8 @@
       <h2>Why this slips past most controls</h2>
       <p>Most identity alerting is built around authentication events: failed logins, MFA fatigue, password sprays. Session replay produces none of those. The activity shows up later, in the application logs, as normal use by a legitimate account. If your detections only watch the front door, a replayed token walks straight past them.</p>
 
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
       <h2>What actually moves the needle</h2>
       <ul>
         <li><strong>Shorten session lifetimes</strong> and use token binding wherever your applications support it, so a stolen token expires quickly or fails off the original device.</li>
@@ -74,6 +76,7 @@
       <p>MFA is not useless. It still stops a large share of credential attacks, and you should keep it. But if it is your last line of defense, you do not really have one. The useful question for a security team is not "what is our MFA adoption rate?" It is "would we notice if a valid session started working from somewhere it shouldn't?"</p>
     </div>
 
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
     <footer class="wrap narrow article-foot">
       <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="mfa">← All writing</a>
       <a class="btn solid" href="https://www.linkedin.com/feed/update/urn:li:activity:7516918600985714689/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="mfa">Discuss on LinkedIn ↗</a>
@@ -90,5 +93,6 @@
 
 <footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><a href="/">harshaaakanti.github.io</a></div></footer>
 <script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
 </body>
 </html>
