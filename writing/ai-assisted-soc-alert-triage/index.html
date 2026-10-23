@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>AI SOC Alert Triage: 15 Minutes to 30 Seconds · HarshaVardhan Aakanti</title>
+<meta name="description" content="How an AI-assisted enrichment pipeline cut first-pass SOC alert triage from 15 minutes to 30 seconds, how it is built, and what it still gets wrong.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI SOC Alert Triage: 15 Minutes to 30 Seconds">
+<meta property="og:description" content="The enrichment pipeline behind 30-second triage, step by step, and an honest list of what it gets wrong.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: a stopwatch showing 15:00 crossed out and 0:30, beside a funnel filtering alerts.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="SOC automation">
+<meta property="article:tag" content="SOC automation">
+<meta property="article:tag" content="AI security">
+<meta property="article:tag" content="Alert triage">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI SOC Alert Triage: 15 Minutes to 30 Seconds">
+<meta name="twitter:description" content="The enrichment pipeline behind 30-second triage, step by step, and an honest list of what it gets wrong.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: a stopwatch showing 15:00 crossed out and 0:30, beside a funnel filtering alerts.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/#article","headline":"AI-assisted SOC alert triage: from 15 minutes to 30 seconds","description":"How an AI-assisted enrichment pipeline cut first-pass SOC alert triage from 15 minutes to 30 seconds, how it is built, and what it still gets wrong.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/","articleSection":"SOC automation","keywords":["SOC alert triage","AI alert enrichment","LLM SOC automation","Model Context Protocol","L1 analyst","mean time to triage","SOAR"],"wordCount":1419,"timeRequired":"PT6M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"Cutting L1 triage from 15 minutes to 30 seconds","item":"https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/#faq","mainEntity":[{"@type":"Question","name":"What is AI-assisted alert triage?","acceptedAnswer":{"@type":"Answer","text":"It is a pipeline that gathers the context an analyst needs for an alert, such as related events, reputation, asset owner and ticket history, and uses an LLM to summarise it before a person opens the alert. The analyst still makes the decision."}},{"@type":"Question","name":"Does the LLM decide whether an alert is malicious?","acceptedAnswer":{"@type":"Answer","text":"No. It suggests a verdict with the evidence behind it. An analyst reviews the summary and the raw evidence, then makes the call and owns the outcome."}},{"@type":"Question","name":"Which alerts should you automate first?","acceptedAnswer":{"@type":"Answer","text":"High-volume, low-risk alert types with a predictable investigation. They give you the most time back and the most data to measure accuracy before you move on to harder cases."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">SOC automation</span>
+      <h1>Cutting L1 triage from 15 minutes to 30 seconds</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/ai-assisted-soc-alert-triage/cover.webp" width="1200" height="630" alt="Cover illustration: a stopwatch showing 15:00 crossed out and 0:30, beside a funnel filtering alerts." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>In an earlier post I argued that <a href="/writing/ai-will-not-replace-l1-soc-analysts/">AI will not replace L1 SOC analysts</a>, and mentioned that first-pass triage dropped from about 15 minutes to about 30 seconds once alerts arrived pre-enriched. A lot of people asked the obvious follow-up: how, exactly? And what breaks?</p>
+      <p>This post is the long answer. It covers where the 15 minutes actually went, how the enrichment pipeline is put together, how we keep the model honest, and the specific ways it still gets things wrong. The tooling is deliberately described in generic terms. The pattern works with any SIEM, EDR, ticketing system and enterprise LLM you already have.</p>
+
+      <h2>Where the 15 minutes went</h2>
+      <p>When we timed L1 analysts on routine alerts, the investigation itself was rarely the slow part. The slow part was gathering. A typical alert meant:</p>
+      <ul>
+        <li>Opening the alert in the SIEM and reading the raw event.</li>
+        <li>Pivoting to the EDR to see what the host and user were doing around that time.</li>
+        <li>Checking every IP, domain and hash against two or three reputation services.</li>
+        <li>Looking up the asset owner, business unit and criticality in the CMDB.</li>
+        <li>Searching old tickets to see whether this user, host or rule had fired before.</li>
+        <li>Writing up the findings in a ticket in a consistent format.</li>
+      </ul>
+      <p>Each step takes a minute or two. None of them needs judgement. Together they add up to most of a quarter hour, repeated dozens of times a shift. That is the work we set out to remove.</p>
+
+      <div class="callout">The decision takes 30 seconds. The gathering used to take the other 14 and a half minutes.</div>
+
+      <h2>How the pipeline works</h2>
+      <p>The pipeline runs the moment an alert is created, before a person opens it. It has four stages.</p>
+      <div class="flow" role="list">
+        <div role="listitem"><b>01 · COLLECT</b><span>Deterministic code pulls the alert, related events, entity reputations, asset data and ticket history.</span></div>
+        <div role="listitem"><b>02 · SUMMARISE</b><span>An LLM, given only that evidence, writes a short summary, timeline and suggested verdict with reasons.</span></div>
+        <div role="listitem"><b>03 · REVIEW</b><span>An analyst reads the summary, checks the linked evidence and makes the call.</span></div>
+      </div>
+      <p>The fourth stage is quiet but important: the analyst's verdict and any correction are written back to the ticket, so we can measure how often the suggestion was right.</p>
+
+      <h2>Stage one: collect with code, not with the model</h2>
+      <p>The most important design choice was to keep data collection deterministic. A SOAR platform or a small Python service runs a fixed set of lookups for each alert type: which queries to run in the SIEM, which EDR fields to pull, which reputation services to call, which CMDB attributes matter. The model does not decide what to look up for routine alerts. That keeps the evidence complete and repeatable, and it keeps cost and latency predictable.</p>
+      <p>For more open-ended questions we expose a small set of read-only tools to the model through the <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Model Context Protocol</a>: search recent events for an entity, fetch a ticket, look up an asset. Every call is logged with the alert ID it was made for. Nothing the model can call changes state. Containment, blocking and account actions stay in playbooks that a person approves.</p>
+
+      <h2>Stage two: a prompt built around evidence</h2>
+      <p>The summary prompt is boring on purpose. It gives the model a role, the collected evidence as structured fields, and a fixed output format:</p>
+      <ul>
+        <li><strong>What happened,</strong> in two or three sentences a manager could read.</li>
+        <li><strong>Timeline,</strong> built only from timestamps in the evidence.</li>
+        <li><strong>Entities,</strong> with their reputation and where that reputation came from.</li>
+        <li><strong>Suggested verdict</strong> (likely benign, needs investigation, likely malicious) with the specific evidence behind it.</li>
+        <li><strong>What is missing,</strong> meaning any lookup that failed or returned nothing.</li>
+      </ul>
+      <p>Two instructions do most of the work. First, every claim must point at a field in the evidence. Second, if the evidence does not support a conclusion, the model must say "unknown" rather than guess. The "what is missing" section exists because a summary that silently skips a failed lookup looks more confident than it should.</p>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>Stage three: the analyst still decides</h2>
+      <p>The analyst sees the summary at the top of the ticket, with links to the raw evidence underneath. Their job changes from gathering to checking. Does the timeline match the events? Does the verdict follow from the reasons? Is there anything the summary does not mention that bothers them?</p>
+      <p>That is where the 30 seconds comes from. It is the time to read and sanity-check a good summary on a routine alert, not the time to fully investigate a real incident. When something looks wrong, the analyst investigates as they always would, just with the context already in front of them.</p>
+
+      <h2>What it gets wrong</h2>
+      <p>This is the section I wish more vendor demos included. These are the failure modes we have actually seen.</p>
+      <ul>
+        <li><strong>Confident summaries of thin evidence.</strong> When a lookup times out, an early version of the prompt would still write a tidy story. The "what is missing" section and the rule to say "unknown" fixed most of this.</li>
+        <li><strong>Over-trusting reputation.</strong> A clean reputation score is not proof of safety. New attacker infrastructure is often clean for its first few days. The model tended to treat "no detections" as "benign" until we told it explicitly that absence of reputation is not evidence of good behaviour.</li>
+        <li><strong>Timezone and ordering mistakes.</strong> Different tools log in different timezones and formats. The model occasionally produced a timeline in the wrong order. We now normalise every timestamp to UTC in code before the model sees it.</li>
+        <li><strong>Pattern-matching on the rule name.</strong> If a rule is called "Suspicious PowerShell", the summary leans suspicious regardless of the actual command. We now put the raw command line ahead of the rule name in the evidence.</li>
+        <li><strong>Hallucinated details.</strong> Rare, but real: a hostname or process that was not in the evidence. Requiring every claim to cite a field makes these easy to spot, and the analyst check catches the rest.</li>
+        <li><strong>Instructions hiding in the data.</strong> Email subjects, file names and user agents are attacker-controlled. Any of them can contain text that looks like an instruction to the model. That deserves its own post, but the short version is that the model never gets a tool that can act on such an instruction.</li>
+      </ul>
+
+      <h2>How we measure it</h2>
+      <p>If you cannot show that automation helps, you are just moving the noise. We track a small set of numbers:</p>
+      <div class="table-wrap">
+        <table class="compare">
+          <thead><tr><th scope="col">Measure</th><th scope="col">Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Time to first decision</td><td>The headline number: how long an alert waits before a person makes a call.</td></tr>
+            <tr><td>Verdict agreement</td><td>How often the analyst agrees with the suggested verdict. Low agreement on a rule means the prompt or the evidence needs work.</td></tr>
+            <tr><td>Correction rate</td><td>How often the analyst edits the summary. A rising rate is an early warning.</td></tr>
+            <tr><td>Missed escalations</td><td>Alerts suggested as benign that turned out to matter. This is the one that must stay at zero.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>If you are building this</h2>
+      <ul>
+        <li><strong>Start with one high-volume, low-risk alert type.</strong> You will learn more from a thousand routine alerts than from ten complex ones.</li>
+        <li><strong>Collect in code, summarise with the model.</strong> Keep the model away from deciding what evidence exists.</li>
+        <li><strong>Make the model show its work.</strong> Every claim links to evidence. Unknown is an acceptable answer.</li>
+        <li><strong>Read-only tools only.</strong> Anything that changes state goes through a playbook with a human approval.</li>
+        <li><strong>Measure agreement, not just speed.</strong> Faster wrong answers are worse than slow right ones.</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>What is AI-assisted alert triage?</strong> It is a pipeline that gathers the context an analyst needs for an alert, such as related events, reputation, asset owner and ticket history, and uses an LLM to summarise it before a person opens the alert. The analyst still makes the decision.</p>
+      <p><strong>Does the LLM decide whether an alert is malicious?</strong> No. It suggests a verdict with the evidence behind it. An analyst reviews the summary and the raw evidence, then makes the call and owns the outcome.</p>
+      <p><strong>Which alerts should you automate first?</strong> High-volume, low-risk alert types with a predictable investigation. They give you the most time back and the most data to measure accuracy before you move on to harder cases.</p>
+
+      <h2>The point</h2>
+      <p>The jump from 15 minutes to 30 seconds is not magic and it is not the model being smart. It is the result of moving the gathering work into code, giving the model a narrow job, and keeping a person on every decision. The model is the last mile of a pipeline that would be valuable even without it. That is also why, when it gets something wrong, the damage stays small.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="triage">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="triage">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="triage" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="triage" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
