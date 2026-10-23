@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google-adsense-account" content="ca-pub-8741162790097644">
+<meta name="theme-color" content="#0A0E18">
+<title>SOC Analyst Starter Kit: Tools and Habits for Year One · HarshaVardhan Aakanti</title>
+<meta name="description" content="A starter kit for new SOC analysts: the free tools worth learning, the skills that matter in year one, and the habits that make analysts trustworthy.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SOC Analyst Starter Kit: Tools and Habits for Year One">
+<meta property="og:description" content="The tools, skills and habits I recommend to every new SOC analyst, from years of training intern cohorts.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:site_name" content="HarshaVardhan Aakanti">
+<meta property="og:image" content="https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/cover.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cover illustration: a toolkit case beside a checklist of logs, timelines, email and habits.">
+<meta property="article:published_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:author" content="https://www.linkedin.com/in/harsha-aakanti/">
+<meta property="article:section" content="Career">
+<meta property="article:tag" content="Career">
+<meta property="article:tag" content="SOC">
+<meta property="article:tag" content="Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SOC Analyst Starter Kit: Tools and Habits for Year One">
+<meta name="twitter:description" content="The tools, skills and habits I recommend to every new SOC analyst, from years of training intern cohorts.">
+<meta name="twitter:image" content="https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/cover.jpg">
+<meta name="twitter:image:alt" content="Cover illustration: a toolkit case beside a checklist of logs, timelines, email and habits.">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/assets/fonts/michroma-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/#article","headline":"SOC analyst starter kit: tools and habits for your first year","description":"A starter kit for new SOC analysts: the free tools worth learning, the skills that matter in year one, and the habits that make analysts trustworthy.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-23","dateModified":"2026-10-23","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/","articleSection":"Career","keywords":["SOC analyst starter kit","new SOC analyst","SOC analyst tools","SOC analyst skills","cybersecurity career","L1 analyst","blue team tools"],"wordCount":1230,"timeRequired":"PT5M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"A SOC analyst's starter kit","item":"https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/"}]},{"@type":"FAQPage","@id":"https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/#faq","mainEntity":[{"@type":"Question","name":"Do I need to know how to code?","acceptedAnswer":{"@type":"Answer","text":"Not on day one, but basic scripting quickly becomes one of the most useful skills you have. Being able to parse a log file or call an API saves hours every week."}},{"@type":"Question","name":"How do I get better at spotting what is abnormal?","acceptedAnswer":{"@type":"Answer","text":"Spend time looking at normal. Review a few clean authentication logs, process trees and email headers every week until the patterns become familiar. Abnormal will start to jump out."}},{"@type":"Question","name":"What if I close an alert that turns out to be real?","acceptedAnswer":{"@type":"Answer","text":"It happens to everyone eventually. Say so quickly, help with the response and take part in the review. Teams care far more about how you handle a miss than about never missing anything."}}]}]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">Career</span>
+      <h1>A SOC analyst's starter kit</h1>
+      <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <figure class="wrap narrow" style="margin-block:0 2.2rem">
+      <img src="/writing/soc-analyst-starter-kit/cover.webp" width="1200" height="630" alt="Cover illustration: a toolkit case beside a checklist of logs, timelines, email and habits." fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--line)">
+    </figure>
+
+    <div class="wrap narrow prose">
+      <p>Every year I help train a new group of SOC interns. Each cohort asks some version of the same question in the first week: what should I learn first? There is so much to know in security that the honest answer, "everything, eventually", is not very useful.</p>
+      <p>This is the more useful answer. It is the starter kit I would hand to anyone in their first year as a SOC analyst: a handful of tools worth learning well, the core skills that come up every shift, and the habits that turn a fast analyst into a good one.</p>
+
+      <div class="callout">Tools change every few years. Habits last a career.</div>
+
+      <h2>The tools worth learning first</h2>
+      <p>Your employer will give you a SIEM, an EDR and a ticketing system, and you will learn those on the job. Alongside them, these free tools come up constantly and are worth getting comfortable with on your own time.</p>
+      <div class="table-wrap">
+        <table class="compare">
+          <thead><tr><th scope="col">Tool</th><th scope="col">What it is for</th></tr></thead>
+          <tbody>
+            <tr><td>CyberChef</td><td>Decoding, decompressing and transforming data: base64, URL encoding, hex, timestamps</td></tr>
+            <tr><td>VirusTotal</td><td>Reputation for files, hashes, URLs, domains and IPs, with relationships between them</td></tr>
+            <tr><td>urlscan.io</td><td>Safely seeing what a URL loads, redirects to and looks like, without visiting it yourself</td></tr>
+            <tr><td>An email header analyser</td><td>Reading SPF, DKIM and DMARC results and tracing the real path of a message</td></tr>
+            <tr><td>Wireshark</td><td>Understanding network traffic at the packet level, even if you rarely capture it at work</td></tr>
+            <tr><td>MITRE ATT&amp;CK</td><td>A shared vocabulary for attacker behaviour, and a map of what to look for next</td></tr>
+            <tr><td>A scripting language</td><td>Python is the usual choice, for parsing logs, calling APIs and automating repetitive work</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>One warning about reputation services: anything you upload may become visible to others. Never submit internal documents or files that could contain sensitive data. Search by hash first.</p>
+
+      <h2>The skills that come up every shift</h2>
+      <ul>
+        <li><strong>Reading logs fluently.</strong> Authentication logs, process creation events, proxy and DNS logs, and cloud audit logs. Learn what normal looks like for each, so abnormal stands out.</li>
+        <li><strong>Building a timeline.</strong> Most investigations come down to putting events in order and spotting the gap or the step that does not fit. Always convert to one timezone first.</li>
+        <li><strong>Email analysis.</strong> Phishing is still one of the most common things you will triage. Learn to read headers, check sender authentication, inspect links and attachments safely and spot lookalike domains.</li>
+        <li><strong>Knowing the operating systems.</strong> What a normal Windows process tree looks like, where persistence hides, how macOS and Linux differ. You cannot spot a strange parent process if you do not know the usual one.</li>
+        <li><strong>Basic networking.</strong> Ports, protocols, DNS, HTTP, TLS and what NAT does to your source IPs. Half of all confusion in investigations is a networking misunderstanding.</li>
+        <li><strong>Identity basics.</strong> How single sign-on, MFA, sessions and tokens work. Modern attacks increasingly target identity rather than machines.</li>
+      </ul>
+
+      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
+
+      <h2>The habits that matter more than the tools</h2>
+      <p>After several intern cohorts, the analysts who grow fastest are rarely the ones who knew the most on day one. They are the ones with good habits.</p>
+      <ul>
+        <li><strong>Write things down as you go.</strong> Every action, query and finding goes in the ticket with a timestamp. Future you, your shift lead and the incident report will all thank you.</li>
+        <li><strong>Write tickets for the next analyst.</strong> A good ticket answers what happened, what you checked, what you found and why you closed it, so someone reading it in six months understands without asking.</li>
+        <li><strong>Ask "how do I know?"</strong> Before closing an alert, ask what evidence actually supports your conclusion. "It looked fine" is not evidence.</li>
+        <li><strong>Escalate early and without embarrassment.</strong> A question that turns out to be nothing costs a few minutes. A real incident you sat on because you were unsure costs far more. Good teams want you to ask.</li>
+        <li><strong>Learn one thing from every alert.</strong> Even a false positive teaches you something about the environment: a tool, a team, a process. Keep a personal notes file of what you learn.</li>
+        <li><strong>Automate the third repetition.</strong> The first time you do something, learn it. The second time, notice it. The third time, script it or ask whether it can be automated.</li>
+        <li><strong>Protect your energy.</strong> SOC work has a real burnout risk. Take breaks, hand over properly, and remember that the queue will still be there tomorrow.</li>
+      </ul>
+
+      <h2>A suggested first-year path</h2>
+      <p>Everyone learns differently, but this rough order has worked well for the interns I have trained:</p>
+      <ul>
+        <li><strong>Months 1 to 3:</strong> learn the environment and the tools. Shadow senior analysts. Triage simple alert types with review. Get fast and accurate at phishing analysis.</li>
+        <li><strong>Months 4 to 6:</strong> handle the full L1 queue independently. Start writing short notes on alert types you see often. Learn the ATT&amp;CK techniques behind your most common alerts.</li>
+        <li><strong>Months 7 to 9:</strong> join investigations as a second analyst. Learn to build timelines and write incident summaries. Write your first small script.</li>
+        <li><strong>Months 10 to 12:</strong> propose a detection improvement or a tuning change for a noisy rule. Run a small hunt with a senior analyst. Teach something to the next new starter.</li>
+      </ul>
+      <p>That last step matters more than it looks. Explaining something to someone else is the fastest way to find out what you do not understand yet.</p>
+
+      <h2>On AI tools</h2>
+      <p>New analysts now start with AI assistants available from day one. Use them, but use them the right way. Let them explain an unfamiliar command line, summarise a long log, or draft a ticket you then check. Do not let them make the decision for you, and never paste sensitive data into a tool your employer has not approved. The analysts who will do best are the ones who understand the fundamentals well enough to know when the AI is wrong. I have written more about this in <a href="/writing/ai-will-not-replace-l1-soc-analysts/">AI will not replace L1 SOC analysts</a>.</p>
+
+      <h2>Certifications and learning resources</h2>
+      <p>Certifications can help you get an interview, but they are not a substitute for hands-on practice. Free and low-cost options that build real skills include blue-team challenge platforms, capture-the-flag events with forensics and log-analysis tracks, home labs with a free SIEM and a few virtual machines, and public incident reports from security vendors and government agencies. Reading how real attacks unfolded is some of the best training available, and it costs nothing.</p>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <p><strong>Do I need to know how to code?</strong> Not on day one, but basic scripting quickly becomes one of the most useful skills you have. Being able to parse a log file or call an API saves hours every week.</p>
+      <p><strong>How do I get better at spotting what is abnormal?</strong> Spend time looking at normal. Review a few clean authentication logs, process trees and email headers every week until the patterns become familiar. Abnormal will start to jump out.</p>
+      <p><strong>What if I close an alert that turns out to be real?</strong> It happens to everyone eventually. Say so quickly, help with the response and take part in the review. Teams care far more about how you handle a miss than about never missing anything.</p>
+
+      <h2>The point</h2>
+      <p>Your first year in a SOC is not about knowing everything. It is about building a foundation: a few tools you know well, the core skills of logs, timelines and email analysis, and habits that make your work trustworthy. Get those right and the advanced topics, from threat hunting to detection engineering, build naturally on top. Everyone senior in this field started exactly where you are.</p>
+    </div>
+
+    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="starter">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="starter">Discuss on LinkedIn ↗</a>
+    </footer>
+    <section class="wrap narrow related" aria-labelledby="related-h">
+      <h2 id="related-h">Keep reading</h2>
+      <ul class="related-list">
+        <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="starter" data-ga-to="ai-soc">
+          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+        <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="starter" data-ga-to="mfa">
+          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><span class="foot-links"><a href="/privacy/">Privacy</a><a href="/">harshaaakanti.github.io</a></span></div></footer>
+<script src="/assets/track.js" defer></script>
+<script src="/assets/ads.js" defer></script>
+<script src="/assets/fc.js" defer></script>
+</body>
+</html>
