@@ -98,9 +98,11 @@ h1 em{font-style:normal;color:var(--gold)}
 
 /* metrics strip */
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
-.metric{padding:var(--s3) var(--s2);border-right:1px solid var(--line);min-width:0}
+.metric{padding:var(--s3) var(--s2);border-right:1px solid var(--line);min-width:0;container-type:inline-size}
 .metric:last-child{border-right:0}
 .metric b{display:block;font:400 clamp(1.6rem,3.4vw,2.4rem)/1 var(--f-display);color:var(--gold);font-variant-numeric:tabular-nums}
+/* cap figures to the cell width so the widest one (15m→30s, ~6.8em) never spills past the divider; below a 20px floor the arrow's <wbr> lets it wrap instead */
+@supports (font-size:1cqi){.metric b{font-size:max(1.25rem,min(clamp(1.6rem,3.4vw,2.4rem),14cqi))}}
 .metric span{display:block;margin-top:.6rem;font-size:.85rem;color:var(--muted);line-height:1.45}
 @media (max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:nth-child(2){border-right:0}.metric:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 
@@ -247,7 +249,7 @@ footer .wrap{padding-block:var(--s4);display:flex;flex-wrap:wrap;justify-content
     <div class="metrics" role="list">
       <div class="metric" role="listitem"><b data-count="35" data-suffix="%">35%</b><span>less false-positive noise from tuned custom detections</span></div>
       <div class="metric" role="listitem"><b data-count="12" data-suffix="+">12+</b><span>SOAR playbooks shipped in Tines and Python</span></div>
-      <div class="metric" role="listitem"><b>15m→30s</b><span>first-pass L1 triage with AI-assisted enrichment</span></div>
+      <div class="metric" role="listitem"><b>15m→<wbr>30s</b><span>first-pass L1 triage with AI-assisted enrichment</span></div>
       <div class="metric" role="listitem"><b data-count="6" data-suffix="+ yrs">6+ yrs</b><span>across enterprise SOC and offensive security</span></div>
     </div>
   </div>
