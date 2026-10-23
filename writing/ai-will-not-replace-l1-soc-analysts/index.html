@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E18">
+<title>AI Will Not Replace L1 SOC Analysts · HarshaVardhan Aakanti</title>
+<meta name="description" content="How enterprise LLMs and the Model Context Protocol cut first-pass SOC triage from 15 minutes to 30 seconds, and why that augments analysts instead of replacing them.">
+<meta name="author" content="HarshaVardhan Aakanti">
+<link rel="canonical" href="https://harshaaakanti.github.io/writing/ai-will-not-replace-l1-soc-analysts/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI Will Not Replace L1 SOC Analysts">
+<meta property="og:description" content="An analyst who uses MCP and enterprise LLMs will outpace three who refuse to adapt. Notes from modernizing SOC triage.">
+<meta property="og:url" content="https://harshaaakanti.github.io/writing/ai-will-not-replace-l1-soc-analysts/">
+<meta property="og:image" content="https://harshaaakanti.github.io/assets/og-image.png">
+<meta property="article:published_time" content="2026-10-10">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI Will Not Replace L1 SOC Analysts","datePublished":"2026-10-10","author":{"@type":"Person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/"},"image":"https://harshaaakanti.github.io/assets/og-image.png","mainEntityOfPage":"https://harshaaakanti.github.io/writing/ai-will-not-replace-l1-soc-analysts/","keywords":["SOC automation","Model Context Protocol","AI security","alert triage","AWS Bedrock","Google Vertex AI","detection engineering"]}
+</script>
+</head>
+<body>
+<nav class="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="mark" href="/" aria-label="Home">H<span>/</span>AAKANTI</a>
+    <ul><li><a href="/">Home</a></li><li><a href="/writing/" aria-current="page">Writing</a></li></ul>
+  </div>
+</nav>
+
+<main>
+  <article>
+    <header class="wrap narrow article-head">
+      <span class="eyebrow">SOC automation · Field note</span>
+      <h1>AI will not replace L1 SOC analysts</h1>
+      <div class="meta"><time datetime="2026-10-10">10 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
+    </header>
+
+    <div class="wrap narrow prose">
+      <p>Every week the same debate comes back: will generative AI make junior security analysts obsolete? My answer is no. But an analyst who works with enterprise LLMs through the Model Context Protocol (MCP) will easily outpace three analysts who refuse to adapt.</p>
+
+      <h2>What we actually built</h2>
+      <p>Over the past few months I have been modernizing our SOC workflows by connecting AWS Bedrock, Google Vertex AI and Atlassian Rovo to our security tools through MCP servers. MCP gives a model a controlled, auditable way to call tools: query the SIEM, look up an IP's reputation, pull asset context from the CMDB, read a ticket's history.</p>
+      <p>The goal was never to let a model make decisions. It was to remove the repetitive work that sits between an alert firing and a human being able to judge it.</p>
+
+      <div class="callout">AI isn't making decisions for us. It removes the boilerplate so analysts can make better ones.</div>
+
+      <h2>Before and after</h2>
+      <p>An L1 analyst used to stitch together telemetry from several sources by hand, check reputations, look up who owns the asset and draft the ticket. Now an automated pipeline enriches the alert in seconds, before a person opens it.</p>
+      <div class="table-wrap">
+        <table class="compare">
+          <thead><tr><th scope="col">Step</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
+          <tbody>
+            <tr><td>First-pass triage</td><td>Tab-switching across tools</td><td>Review of a pre-built summary</td></tr>
+            <tr><td>Time per alert</td><td class="num">~15 min</td><td class="num">~30 sec</td></tr>
+            <tr><td>False positives</td><td>Reach the main queue</td><td>Filtered out before the queue</td></tr>
+            <tr><td>Analyst energy</td><td>Spent clearing the queue</td><td>Spent on real threat hunting</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Why this protects analysts</h2>
+      <p>Burnout in a SOC rarely comes from hard investigations. It comes from the hundredth identical alert of the shift. When that work is automated, junior analysts get to the interesting part of the job sooner: reasoning about intent, spotting what does not fit, and learning to hunt. That is how they become senior analysts.</p>
+
+      <h2>What to keep in mind</h2>
+      <ul>
+        <li><strong>Keep a human on every decision.</strong> The model gathers and summarizes; an analyst decides and owns the outcome.</li>
+        <li><strong>Scope tool access tightly.</strong> An MCP server should expose only the read actions triage needs, with logging on every call.</li>
+        <li><strong>Measure it.</strong> Track time to first decision and false-positive rate so you know the pipeline is helping, not just adding noise in a new place.</li>
+      </ul>
+
+      <h2>The point</h2>
+      <p>The future of cyber defense is not human against machine. It is analysts with real-time context at their fingertips. If your SOC still handles L1 triage exactly the way it did two years ago, you are not only behind on tooling. You are choosing analyst burnout.</p>
+    </div>
+
+    <footer class="wrap narrow article-foot">
+      <a class="btn" href="/writing/">← All writing</a>
+      <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener me">Discuss on LinkedIn</a>
+    </footer>
+  </article>
+</main>
+
+<footer><div class="wrap"><span>© 2026 HarshaVardhan Aakanti</span><a href="/">harshaaakanti.github.io</a></div></footer>
+</body>
+</html>
