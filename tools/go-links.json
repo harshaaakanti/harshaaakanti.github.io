@@ -24,5 +24,10 @@
     "target": "/writing/",
     "utm_medium": "profile",
     "utm_content": "bio"
+  },
+  "bio_pages": {
+    "_about": "Extra profile/bio links per platform, /go/<platform>-<name>/, so home and writing visits are counted separately.",
+    "home":    "/",
+    "writing": "/writing/"
   }
 }
