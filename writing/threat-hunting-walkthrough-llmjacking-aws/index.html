@@ -95,8 +95,6 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
 | sort - count</pre>
       <p>The syntax above is generic pseudocode. Translate it into whatever query language your SIEM uses. The idea is what matters: who is asking about model access, from where, with what tool, across how many regions.</p>
 
-      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
-
       <h2>Step four: separate normal from interesting</h2>
       <p>The first results are mostly legitimate. Your own platform team, infrastructure-as-code pipelines and internal AI projects all call these APIs. The work now is building a picture of normal so the outliers stand out. We looked for identities with any of these traits:</p>
       <ul>
@@ -143,7 +141,6 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
       <p>Threat hunting is not about being clever. It is a disciplined loop: a specific hypothesis, data you have checked, broad queries narrowed by context, honest investigation, and a detection at the end. Run that loop regularly on the attacks that matter most to your business and your detections improve every month, whether or not any single hunt finds an attacker.</p>
     </div>
 
-    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
     <footer class="wrap narrow article-foot">
       <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="hunt">← All writing</a>
       <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="hunt">Discuss on LinkedIn ↗</a>
