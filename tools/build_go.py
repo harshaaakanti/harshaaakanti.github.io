@@ -1,6 +1,8 @@
 """Writes go/<code>/index.html redirect pages from tools/go-links.json.
 
   /go/<platform>/         profile/bio link   -> /writing/
+  /go/<platform>-home/    profile/bio link   -> homepage
+  /go/<platform>-writing/ profile/bio link   -> /writing/
   /go/<platform>-<key>/   one article         -> that article
 
 Each page adds the UTM tags and redirects at once, so Google Analytics
@@ -35,6 +37,9 @@ prof = cfg["profile_links"]
 for p, tags in cfg["platforms"].items():
     t = dict(tags, utm_medium=prof["utm_medium"], utm_content=prof["utm_content"])
     links[p] = (prof["target"], t)
+    for name, path in cfg["bio_pages"].items():
+        if not name.startswith("_"):
+            links[p + "-" + name] = (path, dict(t, utm_content="bio-" + name))
     for key, path in cfg["articles"].items():
         links[p + "-" + key] = (path, dict(tags, utm_content=key))
 
