@@ -15,3 +15,21 @@
     window.gtag('event', el.dataset.ga, params);
   });
 })();
+
+/* Sends "article_read" once, when the reader reaches the end of an article
+   (the footer with the Discuss button), with the article key and seconds on page. */
+(function () {
+  var end = document.querySelector('.article-foot');
+  if (!end || !('IntersectionObserver' in window)) return;
+  var tagged = end.querySelector('[data-ga-article]');
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'article_read', {
+      article: tagged ? tagged.getAttribute('data-ga-article') : location.pathname,
+      read_seconds: Math.round(performance.now() / 1000)
+    });
+  });
+  io.observe(end);
+})();

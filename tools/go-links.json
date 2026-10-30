@@ -1,0 +1,28 @@
+{
+  "_about": "Short tracked links served at /go/<code>/. Edit a target or tag here, run `python3 tools/build_go.py`, commit, and every place the link was posted follows the change.",
+  "site": "https://harshaaakanti.github.io",
+  "articles": {
+    "triage":   "/writing/ai-assisted-soc-alert-triage/",
+    "ai-soc":   "/writing/ai-will-not-replace-l1-soc-analysts/",
+    "tuning":   "/writing/reduce-siem-false-positives-detection-tuning/",
+    "hunt":     "/writing/threat-hunting-walkthrough-llmjacking-aws/",
+    "dac":      "/writing/detection-as-code/",
+    "mfa":      "/writing/mfa-is-not-your-last-line-of-defense/",
+    "llm":      "/writing/llm-security-risks-in-the-soc/",
+    "starter":  "/writing/soc-analyst-starter-kit/",
+    "ir":       "/writing/incident-response-lessons-learned/",
+    "red-blue": "/writing/from-offensive-security-to-blue-team/",
+    "ai-site":  "/writing/how-i-used-ai-to-build-my-portfolio-website/"
+  },
+  "platforms": {
+    "yt": {"utm_source": "youtube",   "utm_medium": "shorts", "utm_campaign": "soc-shorts"},
+    "li": {"utm_source": "linkedin",  "utm_medium": "social", "utm_campaign": "blog-promo"},
+    "ig": {"utm_source": "instagram", "utm_medium": "reels",  "utm_campaign": "soc-reels"}
+  },
+  "profile_links": {
+    "_about": "One link per platform for the channel or profile bio; lands on the writing list.",
+    "target": "/writing/",
+    "utm_medium": "profile",
+    "utm_content": "bio"
+  }
+}
