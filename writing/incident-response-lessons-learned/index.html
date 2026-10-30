@@ -88,8 +88,6 @@
       <p>A laptop with confirmed malware was reimaged the same afternoon to get the user back to work. It was the right outcome for the user. It was the wrong order for the investigation, because the memory and disk artefacts that would have shown how the malware arrived were gone.</p>
       <p><strong>What I do now:</strong> before any destructive remediation, capture what you will need: volatile data if the host is still running, the relevant files, and the EDR timeline. Most EDR platforms can collect this remotely in minutes. Then reimage.</p>
 
-      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
-
       <h2>5. Normalise time before building the timeline</h2>
       <p>One timeline put the data transfer before the login that made it possible. Nobody had made an error in reading the logs. One source logged in UTC, another in local time, and a third in the time zone of the server it ran on. The story looked impossible until the clocks were aligned.</p>
       <p><strong>What I do now:</strong> every timestamp goes into the timeline in UTC, with its original source and time zone noted. It is dull work and it prevents some of the most confusing hours in an investigation.</p>
@@ -123,7 +121,6 @@
       <p>Most incident response mistakes are not about missing knowledge. They are about doing the right steps in the wrong order under pressure: acting before scoping, cleaning before preserving, resetting instead of revoking. The fix is preparation. Short checklists, a habit of writing things down and a blameless review afterwards will improve your next incident more than any new tool.</p>
     </div>
 
-    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
     <footer class="wrap narrow article-foot">
       <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="ir">← All writing</a>
       <a class="btn solid" href="https://www.linkedin.com/feed/update/urn:li:activity:7519623717291905024/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="ir">Discuss on LinkedIn ↗</a>

@@ -106,8 +106,6 @@
       <p>The animated alert funnel at the top of the homepage got the same treatment. It now stops drawing when it scrolls out of view, using an IntersectionObserver, as well as when the tab is hidden. A single animation handle prevents two loops from running at once when it resumes. You will never notice this, which is exactly the goal. Your laptop fan might.</p>
       <p>The mobile fix in pull request #6 is a good example of a bug I would have shipped without noticing. The "15m→30s" figure was wider than its cell on a 320-pixel screen. The fix sizes each figure relative to its own cell with container query units, with a sensible minimum, and lets it wrap after the arrow on the narrowest phones.</p>
 
-      <aside class="ad" data-ad="in-article" aria-label="Advertisement"></aside>
-
       <h2>Search and pagination without a framework</h2>
       <p>A blog with two posts does not need search. A blog with twenty does. Pull request #8 added a search box, topic and year filters, sorting and pagination to the writing page, and it did it without turning the page into an app.</p>
       <p>The article list is still plain HTML, so it works for search engines, for screen readers and for anyone with JavaScript turned off. A small script reads the existing items, then hides and reorders them as you filter. The current search and page live in the URL, so a filtered view can be bookmarked or shared. That is the kind of design choice I care about, and it is the kind an assistant makes well when the brief says "no frameworks" up front.</p>
@@ -153,7 +151,6 @@
       <p>Using AI on this site has felt a lot like using it in the SOC. It is excellent at the repetitive, well-scoped work: wiring up fonts, writing filters, fixing layout edge cases, writing up what changed. It still needs a human for identity, access and judgement. The win is not that I do less. It is that the hours I do spend go into the parts only I can do, like deciding what is worth writing about next.</p>
     </div>
 
-    <div class="wrap narrow"><aside class="ad ad-after" data-ad="after-article" aria-label="Advertisement"></aside></div>
     <footer class="wrap narrow article-foot">
       <a class="btn" href="/writing/" data-ga="all_writing_click" data-ga-article="ai-site">← All writing</a>
       <a class="btn solid" href="https://www.linkedin.com/in/harsha-aakanti/" target="_blank" rel="noopener" data-ga="linkedin_discuss_click" data-ga-article="ai-site">Discuss on LinkedIn ↗</a>
