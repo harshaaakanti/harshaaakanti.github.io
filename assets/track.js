@@ -33,3 +33,21 @@
   });
   io.observe(end);
 })();
+
+/* "Discuss this article" picker: close it on outside click, Escape, or after a choice. */
+(function () {
+  var d = document.querySelector('details.discuss');
+  if (!d) return;
+  var s = d.querySelector('summary');
+  var item = d.querySelector('[data-ga-article]');
+  d.addEventListener('toggle', function () {
+    if (d.open && typeof window.gtag === 'function')
+      window.gtag('event', 'discuss_open', { article: item ? item.getAttribute('data-ga-article') : location.pathname });
+  });
+  document.addEventListener('click', function (e) {
+    if (d.open && (!d.contains(e.target) || e.target.closest('.discuss-menu a'))) d.open = false;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && d.open) { d.open = false; s && s.focus(); }
+  });
+})();
