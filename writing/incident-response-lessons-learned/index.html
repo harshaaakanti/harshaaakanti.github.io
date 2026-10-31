@@ -9,6 +9,7 @@
 <meta name="description" content="Anonymised incident response lessons from real SOC work: the mistakes that cost time or evidence, and what I would do differently next time.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/incident-response-lessons-learned/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Incident Response Lessons Learned From the Field">
 <meta property="og:description" content="The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Incident response</span>
-      <h1>Incident response lessons from the field</h1>
+      <h1 id="incident-response-lessons-from-the-field">Incident response lessons from the field</h1>
       <div class="meta"><time datetime="2026-10-19">19 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,45 +72,45 @@
       <p>Incident response playbooks are written in calm rooms. Incidents are not. Most of what I know about responding well I learned from the moments where something went slightly wrong: a step taken too early, a piece of evidence lost, a message sent to the wrong group, an assumption nobody checked.</p>
       <p>These are some of those lessons. Every example is anonymised and generalised, with details changed or combined so that no organisation, person or case can be identified. The mistakes are real patterns, though, and I have seen most of them more than once.</p>
 
-      <h2>1. Resetting the password is not containment</h2>
+      <h2 id="1-resetting-the-password-is-not-containment">1. Resetting the password is not containment</h2>
       <p>A user's account showed sign-ins from an unfamiliar location. The first response was to reset the password and close the ticket. A day later the same account was sending phishing emails internally. The attacker had never needed the password. They had a valid session token, and resetting the password did nothing to it.</p>
       <p><strong>What I do now:</strong> for any account compromise, revoke all active sessions and refresh tokens, review and remove any newly registered MFA methods, check for OAuth app consents granted during the window, and only then reset the password. I wrote more about why in <a href="/writing/mfa-is-not-your-last-line-of-defense/">MFA is not your last line of defense</a>.</p>
 
-      <h2>2. Check for persistence before declaring victory</h2>
+      <h2 id="2-check-for-persistence-before-declaring-victory">2. Check for persistence before declaring victory</h2>
       <p>In business email compromise cases the attacker's favourite trick is not the login. It is the mailbox rule: forward anything mentioning "invoice" to an external address, then move the original to an obscure folder so the user never sees the replies. Containment that removes the attacker's session but leaves the rule in place means the attacker keeps reading the mail.</p>
       <p><strong>What I do now:</strong> I keep a persistence checklist for each incident type. For email it includes inbox rules, forwarding settings, delegates, connected apps and newly created app passwords. For cloud accounts it includes new users, access keys, roles and trust policies. For endpoints it includes scheduled tasks, services, startup items and new local accounts.</p>
 
       <div class="callout">Containment is not done when the attacker is out. It is done when they cannot get back in.</div>
 
-      <h2>3. Scope before you act, when you can</h2>
+      <h2 id="3-scope-before-you-act-when-you-can">3. Scope before you act, when you can</h2>
       <p>On one investigation, a compromised machine was isolated within minutes of the first alert. That felt like a win. But it also told the attacker we had noticed, and they quickly used a second foothold we had not found yet. The second foothold took far longer to locate than the first.</p>
       <p><strong>What I do now:</strong> if there is active harm, such as data leaving or ransomware spreading, contain immediately. If there is not, spend a short, time-boxed window scoping first: what else did this user, host or credential touch? Then contain everything at once. It is a judgement call each time, and the important part is making it on purpose rather than by reflex.</p>
 
-      <h2>4. Preserve evidence before you clean up</h2>
+      <h2 id="4-preserve-evidence-before-you-clean-up">4. Preserve evidence before you clean up</h2>
       <p>A laptop with confirmed malware was reimaged the same afternoon to get the user back to work. It was the right outcome for the user. It was the wrong order for the investigation, because the memory and disk artefacts that would have shown how the malware arrived were gone.</p>
       <p><strong>What I do now:</strong> before any destructive remediation, capture what you will need: volatile data if the host is still running, the relevant files, and the EDR timeline. Most EDR platforms can collect this remotely in minutes. Then reimage.</p>
 
-      <h2>5. Normalise time before building the timeline</h2>
+      <h2 id="5-normalise-time-before-building-the-timeline">5. Normalise time before building the timeline</h2>
       <p>One timeline put the data transfer before the login that made it possible. Nobody had made an error in reading the logs. One source logged in UTC, another in local time, and a third in the time zone of the server it ran on. The story looked impossible until the clocks were aligned.</p>
       <p><strong>What I do now:</strong> every timestamp goes into the timeline in UTC, with its original source and time zone noted. It is dull work and it prevents some of the most confusing hours in an investigation.</p>
 
-      <h2>6. One log source is a rumour, two is evidence</h2>
+      <h2 id="6-one-log-source-is-a-rumour-two-is-evidence">6. One log source is a rumour, two is evidence</h2>
       <p>In an insider-risk case, the first data suggested a departing employee had uploaded a large volume of files to personal cloud storage. It would have been easy to stop there. But a proxy log alone shows that bytes moved, not what they were or why. Correlating with endpoint file activity, the identity provider and the device record turned "probably" into a clear, defensible timeline, and it also ruled out an innocent explanation that the first source could not.</p>
       <p><strong>What I do now:</strong> any conclusion that could affect a person's job or a legal decision gets corroborated from at least two independent sources, and the report says which claims rest on which evidence.</p>
 
-      <h2>7. Bring in HR and legal early on people cases</h2>
+      <h2 id="7-bring-in-hr-and-legal-early-on-people-cases">7. Bring in HR and legal early on people cases</h2>
       <p>Investigations involving an employee are not only technical. Whether you can review certain data, how findings are shared, and who decides what happens next are questions for HR and legal. Bringing them in late means redoing work, or worse, having evidence questioned.</p>
       <p><strong>What I do now:</strong> as soon as an investigation points at an individual, the case follows the people-investigation process. Access to the case is limited, notes are factual and neutral, and opinions stay out of the report.</p>
 
-      <h2>8. Write it down as you go</h2>
+      <h2 id="8-write-it-down-as-you-go">8. Write it down as you go</h2>
       <p>At the end of a long incident, nobody remembers exactly when a host was isolated, who approved a block, or which query found the second foothold. Reconstructing it afterwards is slow and error-prone.</p>
       <p><strong>What I do now:</strong> keep a running log in the ticket from the first minute: time, action, who, and why. It costs seconds per entry and saves hours when writing the report or handing over to the next shift.</p>
 
-      <h2>9. Communicate in the right channel</h2>
+      <h2 id="9-communicate-in-the-right-channel">9. Communicate in the right channel</h2>
       <p>Discussing an active incident in a chat channel the attacker might be able to read, from an account that might be compromised, is a classic mistake. So is telling too many people too early, which turns a contained incident into rumours.</p>
       <p><strong>What I do now:</strong> for serious incidents, move coordination to a separate, need-to-know channel, and assume any account involved in the incident may be watched until proven otherwise.</p>
 
-      <h2>10. The lessons-learned meeting is not optional</h2>
+      <h2 id="10-the-lessons-learned-meeting-is-not-optional">10. The lessons-learned meeting is not optional</h2>
       <p>The incidents that repeat are the ones nobody reviewed. A short, blameless review after each significant incident, covering what happened, what went well, what was slow and what changes, is where the real improvement comes from. The output should be a few specific actions with owners, such as a new detection, a logging fix or a playbook update, not a document nobody reads.</p>
       <p>Frameworks like <a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener">NIST SP 800-61</a> describe this as part of the incident lifecycle for a reason. Response that does not feed back into detection and prevention just waits for the next incident.</p>
 
@@ -117,7 +119,7 @@
       <p><strong>Should you contain an incident immediately?</strong> If there is active harm, such as data leaving or ransomware spreading, yes. Otherwise a short, time-boxed scoping window first can stop the attacker falling back to a foothold you have not found yet.</p>
       <p><strong>What is a blameless post-incident review?</strong> A short meeting after an incident that looks at what happened, what went well and what was slow, without blaming individuals. It should end with a few specific actions, each with an owner.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Most incident response mistakes are not about missing knowledge. They are about doing the right steps in the wrong order under pressure: acting before scoping, cleaning before preserving, resetting instead of revoking. The fix is preparation. Short checklists, a habit of writing things down and a blameless review afterwards will improve your next incident more than any new tool.</p>
     </div>
 
@@ -129,9 +131,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="incident-response-lessons-learned">
         <li><a href="/writing/detection-as-code/" data-ga="related_post_click" data-ga-from="ir" data-ga-to="dac">
-          <span class="k">Detection engineering</span><h3>Detection-as-code: treating detection rules like software</h3><p>Version control, tests, peer review and CI for detection rules, and why they make a SOC faster and safer.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Detection engineering</span><h3 id="detection-as-code-treating-detection-rules-like-software">Detection-as-code: treating detection rules like software</h3><p>Version control, tests, peer review and CI for detection rules, and why they make a SOC faster and safer.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/threat-hunting-walkthrough-llmjacking-aws/" data-ga="related_post_click" data-ga-from="ir" data-ga-to="hunt">
-          <span class="k">Threat hunting</span><h3>A threat hunt walkthrough, from hypothesis to detection</h3><p>One hunt from start to finish: the hypothesis, the CloudTrail queries, what turned up, and the detection that came out of it.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Threat hunting</span><h3 id="a-threat-hunt-walkthrough-from-hypothesis-to-detection">A threat hunt walkthrough, from hypothesis to detection</h3><p>One hunt from start to finish: the hypothesis, the CloudTrail queries, what turned up, and the detection that came out of it.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

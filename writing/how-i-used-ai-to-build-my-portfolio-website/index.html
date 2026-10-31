@@ -9,6 +9,7 @@
 <meta name="description" content="How I run a plain HTML portfolio with an AI assistant: faster fonts, blog search, AdSense with consent, and the steps that still needed a human.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/how-i-used-ai-to-build-my-portfolio-website/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How I Used AI to Build My Portfolio Website">
 <meta property="og:description" content="Nine pull requests, one AI assistant, and the moments where a human still had to step in.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Building with AI</span>
-      <h1>How I used AI to build and run my portfolio website</h1>
+      <h1 id="how-i-used-ai-to-build-and-run-my-portfolio-website">How I used AI to build and run my portfolio website</h1>
       <div class="meta"><time datetime="2026-10-24">24 Oct 2026</time><span>7 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,7 +72,7 @@
       <p>I spend my working days arguing that AI should take the boilerplate off analysts so they can focus on decisions. At some point I had to ask whether I practise that outside the SOC. This site is the answer. It is plain HTML, CSS and a little JavaScript on GitHub Pages, and most of the changes you see on it were written by an AI assistant, Claude, working in the repository and opening pull requests that I review and merge.</p>
       <p>This is not a story about an AI building a website while I slept. It is closer to working with a fast, tireless colleague who never touches production without me. Here is how that works, what it shipped, and the places where it simply could not do the job alone.</p>
 
-      <h2>How the setup works</h2>
+      <h2 id="how-the-setup-works">How the setup works</h2>
       <p>The assistant has access to one repository and nothing else. Every change happens on a branch and arrives as a pull request with a short description of what changed and why. I read the diff, check the preview, and only then merge. GitHub Pages deploys the main branch, so nothing goes live until I say so.</p>
       <p>Before the first change, I wrote down the rules in a short brief that the assistant reads at the start of every task:</p>
       <ul>
@@ -82,7 +84,7 @@
 
       <div class="callout">The AI writes the pull request. I own the merge.</div>
 
-      <h2>What it shipped, one pull request at a time</h2>
+      <h2 id="what-it-shipped-one-pull-request-at-a-time">What it shipped, one pull request at a time</h2>
       <p>Here are the first nine pull requests, in order. Each one is small enough to review in a few minutes, which is the point.</p>
       <div class="table-wrap">
         <table class="compare">
@@ -101,16 +103,16 @@
         </table>
       </div>
 
-      <h2>Speed: fonts and a polite animation</h2>
+      <h2 id="speed-fonts-and-a-polite-animation">Speed: fonts and a polite animation</h2>
       <p>The site used to pull its three typefaces from Google Fonts. That meant a render-blocking stylesheet and extra connections to third-party servers before a single word appeared. The first pull request replaced it with four self-hosted font files, cut down to the Latin character set, declared with <strong>font-display: swap</strong> so text shows immediately, and preloaded so the browser fetches them early. It also dropped a font weight the site never used.</p>
       <p>The animated alert funnel at the top of the homepage got the same treatment. It now stops drawing when it scrolls out of view, using an IntersectionObserver, as well as when the tab is hidden. A single animation handle prevents two loops from running at once when it resumes. You will never notice this, which is exactly the goal. Your laptop fan might.</p>
       <p>The mobile fix in pull request #6 is a good example of a bug I would have shipped without noticing. The "15m→30s" figure was wider than its cell on a 320-pixel screen. The fix sizes each figure relative to its own cell with container query units, with a sensible minimum, and lets it wrap after the arrow on the narrowest phones.</p>
 
-      <h2>Search and pagination without a framework</h2>
+      <h2 id="search-and-pagination-without-a-framework">Search and pagination without a framework</h2>
       <p>A blog with two posts does not need search. A blog with twenty does. Pull request #8 added a search box, topic and year filters, sorting and pagination to the writing page, and it did it without turning the page into an app.</p>
       <p>The article list is still plain HTML, so it works for search engines, for screen readers and for anyone with JavaScript turned off. A small script reads the existing items, then hides and reorders them as you filter. The current search and page live in the URL, so a filtered view can be bookmarked or shared. That is the kind of design choice I care about, and it is the kind an assistant makes well when the brief says "no frameworks" up front.</p>
 
-      <h2>Ads and consent, done carefully</h2>
+      <h2 id="ads-and-consent-done-carefully">Ads and consent, done carefully</h2>
       <p>I wanted ads on the blog to help cover the time I put into writing, but not at the cost of a slow or jumpy page. The result:</p>
       <ul>
         <li><strong>Ads only on the blog.</strong> The homepage stays ad-free.</li>
@@ -120,7 +122,7 @@
         <li><strong>Consent first.</strong> A privacy page explains analytics and ads, and visitors in Europe, the UK, Switzerland and US states with privacy laws see the consent choices those rules require.</li>
       </ul>
 
-      <h2>Where the AI needed a human</h2>
+      <h2 id="where-the-ai-needed-a-human">Where the AI needed a human</h2>
       <p>This is the part I find most interesting, because it maps closely to what I see in security automation. The code was the easy part. The hard parts were identity, access and judgement.</p>
       <ul>
         <li><strong>Browser access.</strong> Several steps lived in web dashboards, not in the repository. The assistant was running in the cloud and could not drive the browser on my machine, where I was signed in. We had to switch to a session running on my own computer for those steps, and even then I stayed at the keyboard.</li>
@@ -130,10 +132,10 @@
       </ul>
       <p>None of those are failures of the tool. They are the boundaries I would want any automation to respect: it acts inside a scoped permission, and a person signs off on identity and irreversible steps.</p>
 
-      <h2>What it caught that I missed</h2>
+      <h2 id="what-it-caught-that-i-missed">What it caught that I missed</h2>
       <p>It goes the other way too. The assistant noticed that my article read times said five minutes when the posts took about two. It noticed the stats overflowing on small phones. It noticed that the fonts were costing page speed. None of these were in my original request. They came from an assistant reading the whole site rather than only the line I pointed at.</p>
 
-      <h2>If you want to try this</h2>
+      <h2 id="if-you-want-to-try-this">If you want to try this</h2>
       <ul>
         <li><strong>Write the rules down first.</strong> A one-page brief beats a long prompt every time.</li>
         <li><strong>Keep every change small.</strong> One pull request, one idea. You will actually review it.</li>
@@ -147,7 +149,7 @@
       <p><strong>Why not use a website builder or a framework?</strong> Plain HTML, CSS and JavaScript load fast, are easy to review and have nothing to update or patch. They are also easy for an AI assistant to reason about, which keeps each change small and predictable.</p>
       <p><strong>Do ads slow the site down?</strong> Not much, if they are done carefully. Here the ad script loads only when an ad box is about to scroll into view, and each box has its space reserved so the text never jumps.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Using AI on this site has felt a lot like using it in the SOC. It is excellent at the repetitive, well-scoped work: wiring up fonts, writing filters, fixing layout edge cases, writing up what changed. It still needs a human for identity, access and judgement. The win is not that I do less. It is that the hours I do spend go into the parts only I can do, like deciding what is worth writing about next.</p>
     </div>
 
@@ -159,9 +161,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="how-i-used-ai-to-build-my-portfolio-website">
         <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="ai-site" data-ga-to="mfa">
-          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Identity security</span><h3 id="mfa-is-not-your-last-line-of-defense">MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="ai-site" data-ga-to="ai-soc">
-          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+          <span class="k">SOC automation</span><h3 id="ai-will-not-replace-l1-soc-analysts">AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

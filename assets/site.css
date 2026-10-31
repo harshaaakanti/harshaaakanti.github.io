@@ -128,3 +128,9 @@ footer .wrap{padding-block:2rem;display:flex;flex-wrap:wrap;justify-content:spac
 .related-list h3{font:600 1.1rem/1.35 var(--f-body);margin:0;color:var(--fg)}
 .related-list p{margin:0;color:var(--muted);font-size:.93rem;line-height:1.55}
 .related-list .more{margin-top:auto;font:500 .8rem/1 var(--f-mono);color:var(--gold)}
+
+/* breadcrumbs */
+.crumbs ol{list-style:none;margin:0 0 1rem;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;font:400 .76rem/1.4 var(--f-mono);color:var(--muted)}
+.crumbs li+li::before{content:"/";margin-right:.4rem;opacity:.6}
+.crumbs a{color:var(--muted)}
+.crumbs a:hover{color:var(--fg)}
