@@ -1,12 +1,13 @@
 # HarshaVardhan Aakanti
 
-> Personal site of HarshaVardhan Aakanti (Harsha Aakanti), an Information Security Analyst specialising in AI-driven SOC automation, detection engineering, threat hunting and incident response. The site holds a profile page and practical articles written from day-to-day SOC work.
+> Personal site of HarshaVardhan Aakanti (Harsha Aakanti), an Information Security Analyst specialising in AI-driven SOC automation, detection engineering, threat hunting and incident response. The homepage is the blog: practical articles written from day-to-day SOC work. The profile lives on the About page.
 
 All articles are written by HarshaVardhan Aakanti. Case details are anonymised and sanitised. The site is plain HTML with no login and no forms.
 
 ## Profile
 
-- [Profile](https://harshaaakanti.github.io/): Background, the SOC alert pipeline, skills, sanitised case files, things he has built, career journey and credentials.
+- [About](https://harshaaakanti.github.io/about/): Background, the SOC alert pipeline, skills, sanitised case files, things he has built, career journey and credentials.
+- [Home](https://harshaaakanti.github.io/): Featured and latest articles, topics, search and FAQ.
 
 ## Articles
 
