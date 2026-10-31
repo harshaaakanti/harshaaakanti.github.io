@@ -17,7 +17,8 @@
   "platforms": {
     "yt": {"utm_source": "youtube",   "utm_medium": "shorts", "utm_campaign": "soc-shorts"},
     "li": {"utm_source": "linkedin",  "utm_medium": "social", "utm_campaign": "blog-promo"},
-    "ig": {"utm_source": "instagram", "utm_medium": "reels",  "utm_campaign": "soc-reels"}
+    "ig": {"utm_source": "instagram", "utm_medium": "reels",  "utm_campaign": "soc-reels"},
+    "x":  {"utm_source": "x",         "utm_medium": "social", "utm_campaign": "x-relaunch"}
   },
   "profile_links": {
     "_about": "One link per platform for the channel or profile bio; lands on the writing list.",
