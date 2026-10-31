@@ -9,6 +9,7 @@
 <meta name="description" content="Info-stealers lift session cookies and OAuth tokens, so attackers skip the login and MFA entirely. What SOC teams should detect and change instead.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MFA Is Not Your Last Line of Defense">
 <meta property="og:description" content="MFA protects the login. Attackers are skipping the login. What actually moves the needle against session hijacking.">
@@ -34,7 +35,7 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLE4R5QVN1"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YLE4R5QVN1');</script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","headline":"MFA Is Not Your Last Line of Defense","datePublished":"2026-10-16","author":{"@type":"Person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/"},"image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/cover.jpg","width":1200,"height":630},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/","keywords":["session hijacking","info-stealer","MFA","identity security","detection engineering","incident response"],"dateModified":"2026-10-24"}
+{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","@id":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/#article","headline":"MFA Is Not Your Last Line of Defense","description":"Info-stealers lift session cookies and OAuth tokens, so attackers skip the login and MFA entirely. What SOC teams should detect and change instead.","image":{"@type":"ImageObject","url":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/cover.jpg","width":1200,"height":630},"datePublished":"2026-10-16","dateModified":"2026-10-24","author":{"@type":"Person","@id":"https://harshaaakanti.github.io/#person","name":"HarshaVardhan Aakanti","url":"https://harshaaakanti.github.io/","sameAs":["https://www.linkedin.com/in/harsha-aakanti/","https://github.com/harshaaakanti"]},"publisher":{"@id":"https://harshaaakanti.github.io/#person"},"mainEntityOfPage":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/","articleSection":"Identity security","keywords":["session hijacking","info-stealer","MFA","identity security","detection engineering","incident response"],"timeRequired":"PT2M","inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://harshaaakanti.github.io/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://harshaaakanti.github.io/writing/"},{"@type":"ListItem","position":3,"name":"MFA is not your last line of defense","item":"https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/"}]}]}
 </script>
 </head>
 <body>
@@ -48,8 +49,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Identity security</span>
-      <h1>MFA is not your last line of defense</h1>
+      <h1 id="mfa-is-not-your-last-line-of-defense">MFA is not your last line of defense</h1>
       <div class="meta"><time datetime="2026-10-16">16 Oct 2026</time><span>2 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -62,7 +64,7 @@
 
       <div class="callout">MFA protects the login. Attackers are skipping the login.</div>
 
-      <h2>What I keep seeing from the SOC floor</h2>
+      <h2 id="what-i-keep-seeing-from-the-soc-floor">What I keep seeing from the SOC floor</h2>
       <p>The pattern is consistent, and it never touches a login page:</p>
       <div class="flow" role="list">
         <div role="listitem"><b>01 · INFECT</b><span>Info-stealer malware lands on a personal or unmanaged device.</span></div>
@@ -71,10 +73,10 @@
       </div>
       <p>A stolen session cookie is a fully authenticated user. Most organizations have no detection for it, because from the identity provider's point of view nothing failed. There was no bad password and no denied push. The session simply kept working from somewhere new.</p>
 
-      <h2>Why this slips past most controls</h2>
+      <h2 id="why-this-slips-past-most-controls">Why this slips past most controls</h2>
       <p>Most identity alerting is built around authentication events: failed logins, MFA fatigue, password sprays. Session replay produces none of those. The activity shows up later, in the application logs, as normal use by a legitimate account. If your detections only watch the front door, a replayed token walks straight past them.</p>
 
-      <h2>What actually moves the needle</h2>
+      <h2 id="what-actually-moves-the-needle">What actually moves the needle</h2>
       <ul>
         <li><strong>Shorten session lifetimes</strong> and use token binding wherever your applications support it, so a stolen token expires quickly or fails off the original device.</li>
         <li><strong>Detect session reuse</strong> from a new ASN, a new device fingerprint, or an impossible-travel pattern within the same session, not only across logins.</li>
@@ -82,7 +84,7 @@
         <li><strong>Revoke sessions during incident response,</strong> not just reset passwords. A password reset does nothing to a token that is already valid.</li>
       </ul>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>MFA is not useless. It still stops a large share of credential attacks, and you should keep it. But if it is your last line of defense, you do not really have one. The useful question for a security team is not "what is our MFA adoption rate?" It is "would we notice if a valid session started working from somewhere it shouldn't?"</p>
     </div>
 
@@ -94,9 +96,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="mfa-is-not-your-last-line-of-defense">
         <li><a href="/writing/ai-will-not-replace-l1-soc-analysts/" data-ga="related_post_click" data-ga-from="mfa" data-ga-to="ai-soc">
-          <span class="k">SOC automation</span><h3>AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
+          <span class="k">SOC automation</span><h3 id="ai-will-not-replace-l1-soc-analysts">AI will not replace L1 SOC analysts</h3><p>How LLMs and the Model Context Protocol cut first-pass triage from 15 minutes to 30 seconds, and why that helps analysts.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/soc-analyst-starter-kit/" data-ga="related_post_click" data-ga-from="mfa" data-ga-to="starter">
-          <span class="k">Career</span><h3>A SOC analyst's starter kit</h3><p>The tools, skills and habits I recommend to every new SOC analyst, from years of training intern cohorts.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Career</span><h3 id="a-soc-analysts-starter-kit">A SOC analyst's starter kit</h3><p>The tools, skills and habits I recommend to every new SOC analyst, from years of training intern cohorts.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

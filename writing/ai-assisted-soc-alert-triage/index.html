@@ -9,6 +9,7 @@
 <meta name="description" content="How an AI-assisted enrichment pipeline cut first-pass SOC alert triage from 15 minutes to 30 seconds, how it is built, and what it still gets wrong.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AI SOC Alert Triage: 15 Minutes to 30 Seconds">
 <meta property="og:description" content="The enrichment pipeline behind 30-second triage, step by step, and an honest list of what it gets wrong.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">SOC automation</span>
-      <h1>Cutting L1 triage from 15 minutes to 30 seconds</h1>
+      <h1 id="cutting-l1-triage-from-15-minutes-to-30-seconds">Cutting L1 triage from 15 minutes to 30 seconds</h1>
       <div class="meta"><time datetime="2026-10-24">24 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,7 +72,7 @@
       <p>In an earlier post I argued that <a href="/writing/ai-will-not-replace-l1-soc-analysts/">AI will not replace L1 SOC analysts</a>, and mentioned that first-pass triage dropped from about 15 minutes to about 30 seconds once alerts arrived pre-enriched. A lot of people asked the obvious follow-up: how, exactly? And what breaks?</p>
       <p>This post is the long answer. It covers where the 15 minutes actually went, how the enrichment pipeline is put together, how we keep the model honest, and the specific ways it still gets things wrong. The tooling is deliberately described in generic terms. The pattern works with any SIEM, EDR, ticketing system and enterprise LLM you already have.</p>
 
-      <h2>Where the 15 minutes went</h2>
+      <h2 id="where-the-15-minutes-went">Where the 15 minutes went</h2>
       <p>When we timed L1 analysts on routine alerts, the investigation itself was rarely the slow part. The slow part was gathering. A typical alert meant:</p>
       <ul>
         <li>Opening the alert in the SIEM and reading the raw event.</li>
@@ -84,7 +86,7 @@
 
       <div class="callout">The decision takes 30 seconds. The gathering used to take the other 14 and a half minutes.</div>
 
-      <h2>How the pipeline works</h2>
+      <h2 id="how-the-pipeline-works">How the pipeline works</h2>
       <p>The pipeline runs the moment an alert is created, before a person opens it. It has four stages.</p>
       <div class="flow" role="list">
         <div role="listitem"><b>01 · COLLECT</b><span>Deterministic code pulls the alert, related events, entity reputations, asset data and ticket history.</span></div>
@@ -93,11 +95,11 @@
       </div>
       <p>The fourth stage is quiet but important: the analyst's verdict and any correction are written back to the ticket, so we can measure how often the suggestion was right.</p>
 
-      <h2>Stage one: collect with code, not with the model</h2>
+      <h2 id="stage-one-collect-with-code-not-with-the-model">Stage one: collect with code, not with the model</h2>
       <p>The most important design choice was to keep data collection deterministic. A SOAR platform or a small Python service runs a fixed set of lookups for each alert type: which queries to run in the SIEM, which EDR fields to pull, which reputation services to call, which CMDB attributes matter. The model does not decide what to look up for routine alerts. That keeps the evidence complete and repeatable, and it keeps cost and latency predictable.</p>
       <p>For more open-ended questions we expose a small set of read-only tools to the model through the <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Model Context Protocol</a>: search recent events for an entity, fetch a ticket, look up an asset. Every call is logged with the alert ID it was made for. Nothing the model can call changes state. Containment, blocking and account actions stay in playbooks that a person approves.</p>
 
-      <h2>Stage two: a prompt built around evidence</h2>
+      <h2 id="stage-two-a-prompt-built-around-evidence">Stage two: a prompt built around evidence</h2>
       <p>The summary prompt is boring on purpose. It gives the model a role, the collected evidence as structured fields, and a fixed output format:</p>
       <ul>
         <li><strong>What happened,</strong> in two or three sentences a manager could read.</li>
@@ -108,11 +110,11 @@
       </ul>
       <p>Two instructions do most of the work. First, every claim must point at a field in the evidence. Second, if the evidence does not support a conclusion, the model must say "unknown" rather than guess. The "what is missing" section exists because a summary that silently skips a failed lookup looks more confident than it should.</p>
 
-      <h2>Stage three: the analyst still decides</h2>
+      <h2 id="stage-three-the-analyst-still-decides">Stage three: the analyst still decides</h2>
       <p>The analyst sees the summary at the top of the ticket, with links to the raw evidence underneath. Their job changes from gathering to checking. Does the timeline match the events? Does the verdict follow from the reasons? Is there anything the summary does not mention that bothers them?</p>
       <p>That is where the 30 seconds comes from. It is the time to read and sanity-check a good summary on a routine alert, not the time to fully investigate a real incident. When something looks wrong, the analyst investigates as they always would, just with the context already in front of them.</p>
 
-      <h2>What it gets wrong</h2>
+      <h2 id="what-it-gets-wrong">What it gets wrong</h2>
       <p>This is the section I wish more vendor demos included. These are the failure modes we have actually seen.</p>
       <ul>
         <li><strong>Confident summaries of thin evidence.</strong> When a lookup times out, an early version of the prompt would still write a tidy story. The "what is missing" section and the rule to say "unknown" fixed most of this.</li>
@@ -123,7 +125,7 @@
         <li><strong>Instructions hiding in the data.</strong> Email subjects, file names and user agents are attacker-controlled. Any of them can contain text that looks like an instruction to the model. That deserves its own post, but the short version is that the model never gets a tool that can act on such an instruction.</li>
       </ul>
 
-      <h2>How we measure it</h2>
+      <h2 id="how-we-measure-it">How we measure it</h2>
       <p>If you cannot show that automation helps, you are just moving the noise. We track a small set of numbers:</p>
       <div class="table-wrap">
         <table class="compare">
@@ -137,7 +139,7 @@
         </table>
       </div>
 
-      <h2>If you are building this</h2>
+      <h2 id="if-you-are-building-this">If you are building this</h2>
       <ul>
         <li><strong>Start with one high-volume, low-risk alert type.</strong> You will learn more from a thousand routine alerts than from ten complex ones.</li>
         <li><strong>Collect in code, summarise with the model.</strong> Keep the model away from deciding what evidence exists.</li>
@@ -151,7 +153,7 @@
       <p><strong>Does the LLM decide whether an alert is malicious?</strong> No. It suggests a verdict with the evidence behind it. An analyst reviews the summary and the raw evidence, then makes the call and owns the outcome.</p>
       <p><strong>Which alerts should you automate first?</strong> High-volume, low-risk alert types with a predictable investigation. They give you the most time back and the most data to measure accuracy before you move on to harder cases.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>The jump from 15 minutes to 30 seconds is not magic and it is not the model being smart. It is the result of moving the gathering work into code, giving the model a narrow job, and keeping a person on every decision. The model is the last mile of a pipeline that would be valuable even without it. That is also why, when it gets something wrong, the damage stays small.</p>
     </div>
 
@@ -163,9 +165,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="ai-assisted-soc-alert-triage">
         <li><a href="/writing/how-i-used-ai-to-build-my-portfolio-website/" data-ga="related_post_click" data-ga-from="triage" data-ga-to="ai-site">
-          <span class="k">Building with AI</span><h3>How I used AI to build and run my portfolio website</h3><p>Nine pull requests from an AI assistant: faster fonts, blog search, ads with consent, and the moments a human still had to step in.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Building with AI</span><h3 id="how-i-used-ai-to-build-and-run-my-portfolio-website">How I used AI to build and run my portfolio website</h3><p>Nine pull requests from an AI assistant: faster fonts, blog search, ads with consent, and the moments a human still had to step in.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/mfa-is-not-your-last-line-of-defense/" data-ga="related_post_click" data-ga-from="triage" data-ga-to="mfa">
-          <span class="k">Identity security</span><h3>MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Identity security</span><h3 id="mfa-is-not-your-last-line-of-defense">MFA is not your last line of defense</h3><p>Info-stealers lift session cookies and tokens, so attackers skip the login entirely. What to detect and change instead.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

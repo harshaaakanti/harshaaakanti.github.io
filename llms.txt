@@ -1,0 +1,29 @@
+# HarshaVardhan Aakanti
+
+> Personal site of HarshaVardhan Aakanti (Harsha Aakanti), an Information Security Analyst specialising in AI-driven SOC automation, detection engineering, threat hunting and incident response. The site holds a profile page and practical articles written from day-to-day SOC work.
+
+All articles are written by HarshaVardhan Aakanti. Case details are anonymised and sanitised. The site is plain HTML with no login and no forms.
+
+## Profile
+
+- [Profile](https://harshaaakanti.github.io/): Background, the SOC alert pipeline, skills, sanitised case files, things he has built, career journey and credentials.
+
+## Articles
+
+- [How I used AI to build and run my portfolio website](https://harshaaakanti.github.io/writing/how-i-used-ai-to-build-my-portfolio-website/): How I run a plain HTML portfolio with an AI assistant: faster fonts, blog search, AdSense with consent, and the steps that still needed a human. (published 2026-10-24)
+- [Cutting L1 triage from 15 minutes to 30 seconds](https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/): How an AI-assisted enrichment pipeline cut first-pass SOC alert triage from 15 minutes to 30 seconds, how it is built, and what it still gets wrong. (published 2026-10-24)
+- [Tuning detections to remove 35% of false positives](https://harshaaakanti.github.io/writing/reduce-siem-false-positives-detection-tuning/): A detection tuning playbook: how I cut false positives from custom SIEM rules by about 35% without losing coverage, with before and after examples. (published 2026-10-23)
+- [Can LLMs be trusted in the SOC?](https://harshaaakanti.github.io/writing/llm-security-risks-in-the-soc/): The real risks of LLMs in security operations, from prompt injection in alert data to hallucinated IOCs, and the guardrails that make them safe. (published 2026-10-22)
+- [A threat hunt walkthrough, from hypothesis to detection](https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/): A step-by-step threat hunt: an LLMjacking hypothesis, CloudTrail queries for AI model enumeration, triage of the results and the detection that followed. (published 2026-10-21)
+- [Detection-as-code: treating detection rules like software](https://harshaaakanti.github.io/writing/detection-as-code/): A practical guide to detection as code: SIEM rules in Git, tests against sample logs, peer review in pull requests and deployment through CI. (published 2026-10-20)
+- [Incident response lessons from the field](https://harshaaakanti.github.io/writing/incident-response-lessons-learned/): Anonymised incident response lessons from real SOC work: the mistakes that cost time or evidence, and what I would do differently next time. (published 2026-10-19)
+- [From offensive security to blue team](https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/): What three years of bug bounty hunting taught me about SOC defence: thinking in attack paths, reading alerts like an intruder, and what to unlearn. (published 2026-10-18)
+- [A SOC analyst's starter kit](https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/): A starter kit for new SOC analysts: the free tools worth learning, the skills that matter in year one, and the habits that make analysts trustworthy. (published 2026-10-17)
+- [MFA is not your last line of defense](https://harshaaakanti.github.io/writing/mfa-is-not-your-last-line-of-defense/): Info-stealers lift session cookies and OAuth tokens, so attackers skip the login and MFA entirely. What SOC teams should detect and change instead. (published 2026-10-16)
+- [AI will not replace L1 SOC analysts](https://harshaaakanti.github.io/writing/ai-will-not-replace-l1-soc-analysts/): How enterprise LLMs and the Model Context Protocol cut first-pass SOC triage from 15 minutes to 30 seconds, and why that augments analysts instead of replacing them. (published 2026-10-10)
+
+## Optional
+
+- [All writing](https://harshaaakanti.github.io/writing/): Searchable list of every article, filterable by topic and year.
+- [Privacy policy](https://harshaaakanti.github.io/privacy/): How the site uses Google Analytics and Google AdSense.
+- [Sitemap](https://harshaaakanti.github.io/sitemap.xml)

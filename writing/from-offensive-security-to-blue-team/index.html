@@ -9,6 +9,7 @@
 <meta name="description" content="What three years of bug bounty hunting taught me about SOC defence: thinking in attack paths, reading alerts like an intruder, and what to unlearn.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/from-offensive-security-to-blue-team/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="From Bug Bounty to Blue Team: Lessons for Defenders">
 <meta property="og:description" content="What three years of hunting bugs taught me about catching attackers, and what I had to unlearn.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Career</span>
-      <h1>From offensive security to blue team</h1>
+      <h1 id="from-offensive-security-to-blue-team">From offensive security to blue team</h1>
       <div class="meta"><time datetime="2026-10-18">18 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,24 +72,24 @@
       <p>Before I worked in a SOC, I spent about three years on the other side, hunting web application vulnerabilities on public and private bug bounty programs. My job was to find the one thing a team had missed, prove it, and write it up well enough that someone would fix it. Then I moved to defence, where the job is closer to the reverse: notice the one thing an attacker did that does not fit.</p>
       <p>People often ask whether that background helps. It does, enormously, though not always in the ways they expect. Here is what transferred, what I had to unlearn, and what I would tell anyone thinking about making the same move.</p>
 
-      <h2>Lesson 1: attackers think in paths, not alerts</h2>
+      <h2 id="lesson-1-attackers-think-in-paths-not-alerts">Lesson 1: attackers think in paths, not alerts</h2>
       <p>As a bug hunter I never thought about a single vulnerability in isolation. A low-severity information leak was interesting because of what it unlocked: an internal hostname, a user ID format, an API endpoint that should not be public. Chain three small things and you had something serious.</p>
       <p>Attackers in a real network work the same way. Initial access, discovery, credential theft, lateral movement, collection, exfiltration. Each step on its own might produce a low-severity alert that looks harmless. The defender who only reads alerts one at a time misses the story. The defender who asks "if this were the first step, what would the next one be?" finds it.</p>
 
       <div class="callout">An alert is a single frame. An attacker is making a film.</div>
 
-      <h2>Lesson 2: read alerts like an intruder would</h2>
+      <h2 id="lesson-2-read-alerts-like-an-intruder-would">Lesson 2: read alerts like an intruder would</h2>
       <p>When I look at an alert now, my first question is not "is this rule right?" It is "if I were the attacker, why would I have done this?" A PowerShell command makes sense or does not depending on what an intruder would gain from it. A login from a new location matters more if that account has access worth stealing.</p>
       <p>That habit makes triage faster in both directions. Some alerts that look alarming make no sense as attacker behaviour, and you can close them with confidence. Others that look routine suddenly make a lot of sense, and you look harder.</p>
 
-      <h2>Lesson 3: every control has an edge</h2>
+      <h2 id="lesson-3-every-control-has-an-edge">Lesson 3: every control has an edge</h2>
       <p>Bug bounty teaches you that every control has a boundary, and the interesting bugs live right on it. Input validation that covers one parameter but not the next. Authorisation checked on the page but not on the API behind it. Rate limiting on login but not on password reset.</p>
       <p>Defensive controls have edges too. MFA protects the login but not a stolen session, which is why I wrote <a href="/writing/mfa-is-not-your-last-line-of-defense/">MFA is not your last line of defense</a>. EDR covers managed laptops but not the contractor's personal device. A detection catches the common tool but not the renamed copy. Offensive experience trains you to look for the edge of every control you rely on, and to ask what happens just beyond it.</p>
 
-      <h2>Lesson 4: proof beats opinion</h2>
+      <h2 id="lesson-4-proof-beats-opinion">Lesson 4: proof beats opinion</h2>
       <p>A bug bounty report without a working proof of concept is usually closed. You learn quickly to show, not tell: exact steps, exact requests, exact impact. That discipline translates directly into incident reports and detection proposals. "This looks suspicious" gets ignored. "Here is the timeline, here are the three log entries that prove it, and here is what the attacker could reach next" gets action.</p>
 
-      <h2>What I had to unlearn</h2>
+      <h2 id="what-i-had-to-unlearn">What I had to unlearn</h2>
       <p>Not everything transfers. A few offensive habits work against you on the blue side.</p>
       <ul>
         <li><strong>Depth over breadth.</strong> Bug hunting rewards going very deep on one target for days. A SOC shift needs you to handle many alerts well, not one perfectly. Knowing when an alert has had enough attention is a skill I had to build.</li>
@@ -96,11 +98,11 @@
         <li><strong>Thinking about the finding, not the business.</strong> In bounty work, impact is a severity score. In a company, impact is a conversation about risk, cost and timing with people who are not security specialists.</li>
       </ul>
 
-      <h2>Why rotations help</h2>
+      <h2 id="why-rotations-help">Why rotations help</h2>
       <p>One thing that helped me bridge the two worlds was an internship that rotated through every team reporting to the security leadership: the SOC, threat and vulnerability management, application security, security architecture and product security incident response. Seeing how each team worked, and how a vulnerability moves from discovery to fix to detection, made it much clearer where an attacker's mindset adds the most value on defence.</p>
       <p>If your organisation offers rotations, take them. If it does not, ask to shadow the teams next to yours for a week. You will understand your own job better.</p>
 
-      <h2>How defenders can borrow the offensive mindset</h2>
+      <h2 id="how-defenders-can-borrow-the-offensive-mindset">How defenders can borrow the offensive mindset</h2>
       <p>You do not need a bug bounty background to think like an attacker. A few practical ways to build it:</p>
       <ul>
         <li><strong>Walk through ATT&amp;CK for your own environment.</strong> Pick a technique from <a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK</a>, then ask how an attacker would do it here, and what you would see if they did.</li>
@@ -110,7 +112,7 @@
         <li><strong>Ask "what next?" on every alert.</strong> If this were real, what would the attacker do in the next ten minutes, and would we see it?</li>
       </ul>
 
-      <h2>Advice for anyone moving from red to blue</h2>
+      <h2 id="advice-for-anyone-moving-from-red-to-blue">Advice for anyone moving from red to blue</h2>
       <ul>
         <li>Learn the logs. You know how attacks work; now learn what they look like in a SIEM and an EDR timeline.</li>
         <li>Learn the business. Find out what the organisation actually cares about protecting. That is where attackers will go.</li>
@@ -123,7 +125,7 @@
       <p><strong>Is moving from red to blue a step down?</strong> Not at all. Defence is harder in some ways: an attacker needs one path in, while a defender has to watch all of them, every day. The skills are complementary, and many people move back and forth during a career.</p>
       <p><strong>What is purple teaming?</strong> It is offensive and defensive people working together in the open. One side runs a technique, the other watches what their tools see, and both improve the detection on the spot.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Offence and defence are not opposite careers. They are two views of the same problem. Offensive work teaches you how systems fail; defensive work teaches you how to notice failure at scale and respond to it calmly. The best defenders I know can switch between those views quickly, reading an alert as an attacker would, then acting on it as a defender must.</p>
     </div>
 
@@ -135,9 +137,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="from-offensive-security-to-blue-team">
         <li><a href="/writing/incident-response-lessons-learned/" data-ga="related_post_click" data-ga-from="red-blue" data-ga-to="ir">
-          <span class="k">Incident response</span><h3>Incident response lessons from the field</h3><p>The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Incident response</span><h3 id="incident-response-lessons-from-the-field">Incident response lessons from the field</h3><p>The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/detection-as-code/" data-ga="related_post_click" data-ga-from="red-blue" data-ga-to="dac">
-          <span class="k">Detection engineering</span><h3>Detection-as-code: treating detection rules like software</h3><p>Version control, tests, peer review and CI for detection rules, and why they make a SOC faster and safer.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Detection engineering</span><h3 id="detection-as-code-treating-detection-rules-like-software">Detection-as-code: treating detection rules like software</h3><p>Version control, tests, peer review and CI for detection rules, and why they make a SOC faster and safer.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

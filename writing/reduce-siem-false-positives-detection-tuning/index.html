@@ -9,6 +9,7 @@
 <meta name="description" content="A detection tuning playbook: how I cut false positives from custom SIEM rules by about 35% without losing coverage, with before and after examples.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/reduce-siem-false-positives-detection-tuning/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How to Reduce SIEM False Positives by 35%">
 <meta property="og:description" content="How to cut false positives from SIEM detections without blinding yourself, with before and after rule changes.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Detection engineering</span>
-      <h1>Tuning detections to remove 35<span style="font-family:var(--f-body);font-weight:600">%</span> of false positives</h1>
+      <h1 id="tuning-detections-to-remove-35-of-false-positives">Tuning detections to remove 35<span style="font-family:var(--f-body);font-weight:600">%</span> of false positives</h1>
       <div class="meta"><time datetime="2026-10-23">23 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,7 +72,7 @@
       <p>Every SOC I have worked with has the same complaint: too many alerts, too few of them real. The usual responses are either to hire more analysts or to quietly disable the noisiest rules. The first is expensive. The second is how breaches get missed.</p>
       <p>There is a third option, and it is less glamorous than either: tune the detections properly. Over a few months of focused work on our custom rules, we cut false-positive noise by about 35% without removing coverage. This post is the playbook I followed, with examples of the kinds of changes that made the difference.</p>
 
-      <h2>First, define what a false positive is</h2>
+      <h2 id="first-define-what-a-false-positive-is">First, define what a false positive is</h2>
       <p>This sounds pedantic, but most tuning arguments are really definition arguments. I find it useful to separate three things:</p>
       <ul>
         <li><strong>True positive:</strong> the rule fired and the activity was malicious or a real policy violation.</li>
@@ -81,14 +83,14 @@
 
       <div class="callout">Tuning is not turning things off. It is teaching a rule the difference between unusual and suspicious.</div>
 
-      <h2>Step one: measure before you touch anything</h2>
+      <h2 id="step-one-measure-before-you-touch-anything">Step one: measure before you touch anything</h2>
       <p>Pick a window, ideally 30 to 90 days, and pull every alert with its final disposition. For each rule, work out how often it fired, how many of those were closed as false or benign, and how long analysts spent on them. Sort by total analyst time, not by alert count. A rule that fires 50 times a day but is closed in seconds may cost less than one that fires five times and takes 20 minutes each.</p>
       <p>In our case a small number of rules produced most of the noise. That is typical. You do not need to tune everything; you need to tune the top ten well.</p>
 
-      <h2>Step two: read the alerts, not the dashboard</h2>
+      <h2 id="step-two-read-the-alerts-not-the-dashboard">Step two: read the alerts, not the dashboard</h2>
       <p>For each noisy rule, read 20 to 30 recent closed alerts end to end. Patterns show up fast: the same service account, the same deployment tool, the same scheduled job, the same office network. Write down every pattern and how many alerts it explains. This list becomes your tuning plan.</p>
 
-      <h2>Step three: choose the right kind of fix</h2>
+      <h2 id="step-three-choose-the-right-kind-of-fix">Step three: choose the right kind of fix</h2>
       <p>Most of our gains came from five kinds of change. Here they are with illustrative before and after examples. The specifics are simplified, but the shape of each change is real.</p>
       <div class="table-wrap">
         <table class="compare">
@@ -104,7 +106,7 @@
       </div>
       <p>Notice that none of these remove the rule. Each one makes it more specific about what suspicious looks like.</p>
 
-      <h2>Allowlists done safely</h2>
+      <h2 id="allowlists-done-safely">Allowlists done safely</h2>
       <p>Allowlists are where tuning goes wrong most often. A broad exclusion, such as "ignore everything from this server" or "ignore this user", is a gift to an attacker who compromises that server or user. A few rules I follow:</p>
       <ul>
         <li><strong>Exclude the combination, not the entity.</strong> Match the exact tool, path, parent process, host group and account together, not any one of them alone.</li>
@@ -113,7 +115,7 @@
         <li><strong>Log what you suppress.</strong> Suppressed events should still be searchable, so a hunt can find them later.</li>
       </ul>
 
-      <h2>Step four: test before and after</h2>
+      <h2 id="step-four-test-before-and-after">Step four: test before and after</h2>
       <p>Before deploying a tuned rule, run the old and new versions side by side against the same historical data. Three checks matter:</p>
       <ul>
         <li><strong>Noise reduction:</strong> how many of the past false positives would the new version have dropped?</li>
@@ -122,16 +124,16 @@
       </ul>
       <p>The second check is the one people skip. A tuning change that drops a single real detection is not an improvement, however much noise it removes.</p>
 
-      <h2>Step five: measure again, then keep measuring</h2>
+      <h2 id="step-five-measure-again-then-keep-measuring">Step five: measure again, then keep measuring</h2>
       <p>After deployment, compare the same numbers from step one over a similar window. In our case the combined effect across the tuned rules was roughly 35% less false-positive noise, with no loss of the true positives we tested against. Just as important, analysts started trusting those rules again. An alert that is right most of the time gets read carefully. One that is wrong most of the time gets closed on reflex, and that reflex is what attackers rely on.</p>
       <p>Tuning is not a one-off project. New software, new offices and new admin habits all create new noise. We review the top noisy rules on a regular cadence and treat a sudden jump in a rule's volume as a signal in itself.</p>
 
-      <h2>A worked example</h2>
+      <h2 id="a-worked-example">A worked example</h2>
       <p>One rule flagged any process on a server that opened an outbound connection to an address outside our known ranges. In principle it was a good exfiltration and command-and-control signal. In practice it fired constantly, and analysts closed nearly all of it as benign.</p>
       <p>Reading a month of closed alerts showed three patterns. Most came from software update agents contacting their vendors. A second group came from a backup job that had moved to a new cloud region. The rest came from one log source that recorded internal addresses in a different format, so they looked external.</p>
       <p>The fixes matched the patterns. Update agents were excluded only when the signed binary, its usual install path and the vendor's published domains all lined up. The backup job's new destination was added to the known ranges with an owner and a review date. The address format was normalised at ingest, which also fixed two other rules that nobody had connected to the problem. The rule stayed in place, fired far less, and the alerts that remained were worth reading.</p>
 
-      <h2>Common mistakes</h2>
+      <h2 id="common-mistakes">Common mistakes</h2>
       <ul>
         <li><strong>Tuning by volume alone.</strong> The loudest rule is not always the costliest.</li>
         <li><strong>Silencing instead of fixing.</strong> Lowering a rule's severity so nobody looks at it is disabling it with extra steps.</li>
@@ -144,7 +146,7 @@
       <p><strong>Is it safe to allowlist noisy activity?</strong> Yes, if the allowlist is narrow. Exclude the exact combination of tool, path, host group and account, give each exclusion an owner and an expiry, and keep suppressed events searchable.</p>
       <p><strong>How often should detections be re-tuned?</strong> Review your noisiest rules on a regular cadence, such as monthly, and whenever a rule's volume jumps suddenly. New software, offices and admin habits keep creating new noise.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Alert fatigue is a detection engineering problem before it is a staffing problem. Most of the gain comes from a short list of noisy rules, careful reading of real alerts, precise fixes and honest before and after testing. Do that well and you get something more valuable than a smaller queue: analysts who believe their alerts again.</p>
     </div>
 
@@ -156,9 +158,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="reduce-siem-false-positives-detection-tuning">
         <li><a href="/writing/ai-assisted-soc-alert-triage/" data-ga="related_post_click" data-ga-from="tuning" data-ga-to="triage">
-          <span class="k">SOC automation</span><h3>Cutting L1 triage from 15 minutes to 30 seconds</h3><p>How the enrichment pipeline behind 30-second triage is built, step by step, and an honest list of what it still gets wrong.</p><span class="more">Read article →</span></a></li>
+          <span class="k">SOC automation</span><h3 id="cutting-l1-triage-from-15-minutes-to-30-seconds">Cutting L1 triage from 15 minutes to 30 seconds</h3><p>How the enrichment pipeline behind 30-second triage is built, step by step, and an honest list of what it still gets wrong.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/how-i-used-ai-to-build-my-portfolio-website/" data-ga="related_post_click" data-ga-from="tuning" data-ga-to="ai-site">
-          <span class="k">Building with AI</span><h3>How I used AI to build and run my portfolio website</h3><p>Nine pull requests from an AI assistant: faster fonts, blog search, ads with consent, and the moments a human still had to step in.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Building with AI</span><h3 id="how-i-used-ai-to-build-and-run-my-portfolio-website">How I used AI to build and run my portfolio website</h3><p>Nine pull requests from an AI assistant: faster fonts, blog search, ads with consent, and the moments a human still had to step in.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

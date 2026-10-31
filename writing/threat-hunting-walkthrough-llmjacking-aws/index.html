@@ -9,6 +9,7 @@
 <meta name="description" content="A step-by-step threat hunt: an LLMjacking hypothesis, CloudTrail queries for AI model enumeration, triage of the results and the detection that followed.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/threat-hunting-walkthrough-llmjacking-aws/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Threat Hunting Walkthrough: LLMjacking in AWS">
 <meta property="og:description" content="One hunt, start to finish: the hypothesis, the CloudTrail queries, what we found, and the detection that came out of it.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Threat hunting</span>
-      <h1>A threat hunt walkthrough, from hypothesis to detection</h1>
+      <h1 id="a-threat-hunt-walkthrough-from-hypothesis-to-detection">A threat hunt walkthrough, from hypothesis to detection</h1>
       <div class="meta"><time datetime="2026-10-21">21 Oct 2026</time><span>6 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -70,12 +72,12 @@
       <p>Threat hunting gets described in grand terms, but a good hunt is usually small and specific. You pick one question about how an attacker might be operating in your environment, you look for the evidence, and whatever you find, you leave behind something better than you started with: a new detection, a fixed logging gap, or a documented reason to stop worrying.</p>
       <p>This post walks through one hunt from start to finish. The topic is LLMjacking, where attackers use stolen cloud credentials to get access to hosted AI models and then resell or abuse that access, leaving the victim with the bill. The details are generalised and contain nothing from any real environment, but the steps are the ones I follow on every hunt.</p>
 
-      <h2>Step one: start with a hypothesis</h2>
+      <h2 id="step-one-start-with-a-hypothesis">Step one: start with a hypothesis</h2>
       <p>A hunt without a hypothesis is just browsing logs. The hypothesis should be specific enough that you can prove or disprove it with data you actually have. Ours was:</p>
       <div class="callout">If an attacker holds valid AWS credentials, they will enumerate AI model access and quotas before they start using models.</div>
       <p>Where did that come from? Public research on LLMjacking describes a consistent pattern: attackers check whether model access is enabled, which models are available, whether invocation logging is turned on, and how much quota they can use. That recon is noisy compared to normal use, and it happens before the expensive part. It maps to <a href="https://attack.mitre.org/techniques/T1078/004/" target="_blank" rel="noopener">MITRE ATT&amp;CK T1078.004, Valid Accounts: Cloud Accounts</a>, followed by discovery activity.</p>
 
-      <h2>Step two: check you can see it</h2>
+      <h2 id="step-two-check-you-can-see-it">Step two: check you can see it</h2>
       <p>Before writing a single query, confirm the data exists. For this hunt that meant answering three questions:</p>
       <ul>
         <li><strong>Is CloudTrail enabled in every account and region,</strong> including regions you do not normally use? Attackers like quiet regions.</li>
@@ -84,7 +86,7 @@
       </ul>
       <p>A hunt that discovers a logging gap has not failed. It has found the most important thing it could have found.</p>
 
-      <h2>Step three: write the first query broadly</h2>
+      <h2 id="step-three-write-the-first-query-broadly">Step three: write the first query broadly</h2>
       <p>Start wide and narrow down. The first query pulls every call to the AI service's discovery and configuration APIs over the last 90 days, grouped by identity and source.</p>
       <pre class="log" style="margin:0 0 1.3rem">source = cloudtrail
 eventName IN (ListFoundationModels, GetFoundationModelAvailability,
@@ -95,7 +97,7 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
 | sort - count</pre>
       <p>The syntax above is generic pseudocode. Translate it into whatever query language your SIEM uses. The idea is what matters: who is asking about model access, from where, with what tool, across how many regions.</p>
 
-      <h2>Step four: separate normal from interesting</h2>
+      <h2 id="step-four-separate-normal-from-interesting">Step four: separate normal from interesting</h2>
       <p>The first results are mostly legitimate. Your own platform team, infrastructure-as-code pipelines and internal AI projects all call these APIs. The work now is building a picture of normal so the outliers stand out. We looked for identities with any of these traits:</p>
       <ul>
         <li><strong>Discovery calls across many regions in a short window,</strong> which looks like someone checking where access is enabled.</li>
@@ -107,11 +109,11 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
       </ul>
       <p>A second query joined these traits with the identity's history: has this key or role ever called the AI service before? First-time use is not malicious on its own, but first-time use combined with multi-region discovery and an unusual source is worth a closer look.</p>
 
-      <h2>Step five: investigate what turns up</h2>
+      <h2 id="step-five-investigate-what-turns-up">Step five: investigate what turns up</h2>
       <p>In a hunt like this the outcomes usually fall into three buckets. Most hits are explained quickly: a new internal project, a developer testing from home, an automation account doing exactly what it was built to do. A few need a conversation with the owner to confirm. Occasionally one matches the pattern closely, with root or long-lived credentials, many regions, an unfamiliar source and no matching project, and becomes an incident.</p>
       <p>When that happens, the hunt hands over to incident response. Rotate or disable the credentials, review everything else that identity did, check for new users, keys or roles created as persistence, and look at billing for unexpected model usage. Hunting finds it; response contains it.</p>
 
-      <h2>Step six: turn the hunt into a detection</h2>
+      <h2 id="step-six-turn-the-hunt-into-a-detection">Step six: turn the hunt into a detection</h2>
       <p>The most valuable output of a hunt is usually not the finding. It is the detection you write afterwards, so you never have to hunt for the same thing by hand again. From this hunt, the detection logic became:</p>
       <ul>
         <li>Alert when an identity makes AI service discovery calls in three or more regions within an hour.</li>
@@ -121,10 +123,10 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
       </ul>
       <p>We back-tested this against the 90 days of data from the hunt before switching it on, to check it caught the patterns we cared about without flooding the queue.</p>
 
-      <h2>Step seven: write it up</h2>
+      <h2 id="step-seven-write-it-up">Step seven: write it up</h2>
       <p>Every hunt gets a short write-up, even the ones that find nothing. Mine always cover the same things: the hypothesis, the data sources and any gaps, the queries, what was found and how it was resolved, the detections or logging changes that came out of it, and ideas for the next hunt. Over time these become a library. New analysts learn from them, and the next hunter does not start from zero.</p>
 
-      <h2>Lessons from hunts like this</h2>
+      <h2 id="lessons-from-hunts-like-this">Lessons from hunts like this</h2>
       <ul>
         <li><strong>Hunt where the money goes.</strong> AI model access is expensive and easy to resell, so it attracts attackers. Follow the incentive.</li>
         <li><strong>Treat logging gaps as findings.</strong> Missing invocation logs or an unmonitored region is worth fixing even if the hunt finds nothing else.</li>
@@ -137,7 +139,7 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
       <p><strong>What is a threat hunting hypothesis?</strong> It is a specific, testable statement about how an attacker might behave in your environment, such as “an attacker with valid AWS keys will enumerate AI model access before using it”. It tells you which data to look at and what would prove or disprove it.</p>
       <p><strong>What should a threat hunt produce?</strong> At least one of: a new or improved detection, a fixed logging gap, or a documented write-up of what was checked and why it is safe. A hunt that leaves nothing behind has to be repeated by hand next time.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Threat hunting is not about being clever. It is a disciplined loop: a specific hypothesis, data you have checked, broad queries narrowed by context, honest investigation, and a detection at the end. Run that loop regularly on the attacks that matter most to your business and your detections improve every month, whether or not any single hunt finds an attacker.</p>
     </div>
 
@@ -149,9 +151,9 @@ eventName IN (ListFoundationModels, GetFoundationModelAvailability,
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="threat-hunting-walkthrough-llmjacking-aws">
         <li><a href="/writing/llm-security-risks-in-the-soc/" data-ga="related_post_click" data-ga-from="hunt" data-ga-to="llm-risk">
-          <span class="k">AI security</span><h3>Can LLMs be trusted in the SOC?</h3><p>Prompt injection in alert data, hallucinated IOCs and over-privileged agents, and the guardrails that make LLMs safe to use.</p><span class="more">Read article →</span></a></li>
+          <span class="k">AI security</span><h3 id="can-llms-be-trusted-in-the-soc">Can LLMs be trusted in the SOC?</h3><p>Prompt injection in alert data, hallucinated IOCs and over-privileged agents, and the guardrails that make LLMs safe to use.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/reduce-siem-false-positives-detection-tuning/" data-ga="related_post_click" data-ga-from="hunt" data-ga-to="tuning">
-          <span class="k">Detection engineering</span><h3>Tuning detections to remove 35% of false positives</h3><p>A practical playbook for cutting false positives from custom SIEM detections by about 35% without losing coverage.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Detection engineering</span><h3 id="tuning-detections-to-remove-35-of-false-positives">Tuning detections to remove 35% of false positives</h3><p>A practical playbook for cutting false positives from custom SIEM detections by about 35% without losing coverage.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

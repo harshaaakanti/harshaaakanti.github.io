@@ -9,6 +9,7 @@
 <meta name="description" content="A starter kit for new SOC analysts: the free tools worth learning, the skills that matter in year one, and the habits that make analysts trustworthy.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/soc-analyst-starter-kit/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SOC Analyst Starter Kit: Tools and Habits for Year One">
 <meta property="og:description" content="The tools, skills and habits I recommend to every new SOC analyst, from years of training intern cohorts.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Career</span>
-      <h1>A SOC analyst's starter kit</h1>
+      <h1 id="a-soc-analysts-starter-kit">A SOC analyst's starter kit</h1>
       <div class="meta"><time datetime="2026-10-17">17 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -72,7 +74,7 @@
 
       <div class="callout">Tools change every few years. Habits last a career.</div>
 
-      <h2>The tools worth learning first</h2>
+      <h2 id="the-tools-worth-learning-first">The tools worth learning first</h2>
       <p>Your employer will give you a SIEM, an EDR and a ticketing system, and you will learn those on the job. Alongside them, these free tools come up constantly and are worth getting comfortable with on your own time.</p>
       <div class="table-wrap">
         <table class="compare">
@@ -90,7 +92,7 @@
       </div>
       <p>One warning about reputation services: anything you upload may become visible to others. Never submit internal documents or files that could contain sensitive data. Search by hash first.</p>
 
-      <h2>The skills that come up every shift</h2>
+      <h2 id="the-skills-that-come-up-every-shift">The skills that come up every shift</h2>
       <ul>
         <li><strong>Reading logs fluently.</strong> Authentication logs, process creation events, proxy and DNS logs, and cloud audit logs. Learn what normal looks like for each, so abnormal stands out.</li>
         <li><strong>Building a timeline.</strong> Most investigations come down to putting events in order and spotting the gap or the step that does not fit. Always convert to one timezone first.</li>
@@ -100,7 +102,7 @@
         <li><strong>Identity basics.</strong> How single sign-on, MFA, sessions and tokens work. Modern attacks increasingly target identity rather than machines.</li>
       </ul>
 
-      <h2>The habits that matter more than the tools</h2>
+      <h2 id="the-habits-that-matter-more-than-the-tools">The habits that matter more than the tools</h2>
       <p>After several intern cohorts, the analysts who grow fastest are rarely the ones who knew the most on day one. They are the ones with good habits.</p>
       <ul>
         <li><strong>Write things down as you go.</strong> Every action, query and finding goes in the ticket with a timestamp. Future you, your shift lead and the incident report will all thank you.</li>
@@ -112,7 +114,7 @@
         <li><strong>Protect your energy.</strong> SOC work has a real burnout risk. Take breaks, hand over properly, and remember that the queue will still be there tomorrow.</li>
       </ul>
 
-      <h2>A suggested first-year path</h2>
+      <h2 id="a-suggested-first-year-path">A suggested first-year path</h2>
       <p>Everyone learns differently, but this rough order has worked well for the interns I have trained:</p>
       <ul>
         <li><strong>Months 1 to 3:</strong> learn the environment and the tools. Shadow senior analysts. Triage simple alert types with review. Get fast and accurate at phishing analysis.</li>
@@ -122,10 +124,10 @@
       </ul>
       <p>That last step matters more than it looks. Explaining something to someone else is the fastest way to find out what you do not understand yet.</p>
 
-      <h2>On AI tools</h2>
+      <h2 id="on-ai-tools">On AI tools</h2>
       <p>New analysts now start with AI assistants available from day one. Use them, but use them the right way. Let them explain an unfamiliar command line, summarise a long log, or draft a ticket you then check. Do not let them make the decision for you, and never paste sensitive data into a tool your employer has not approved. The analysts who will do best are the ones who understand the fundamentals well enough to know when the AI is wrong. I have written more about this in <a href="/writing/ai-will-not-replace-l1-soc-analysts/">AI will not replace L1 SOC analysts</a>.</p>
 
-      <h2>Certifications and learning resources</h2>
+      <h2 id="certifications-and-learning-resources">Certifications and learning resources</h2>
       <p>Certifications can help you get an interview, but they are not a substitute for hands-on practice. Free and low-cost options that build real skills include blue-team challenge platforms, capture-the-flag events with forensics and log-analysis tracks, home labs with a free SIEM and a few virtual machines, and public incident reports from security vendors and government agencies. Reading how real attacks unfolded is some of the best training available, and it costs nothing.</p>
 
       <h2 id="faq">Frequently asked questions</h2>
@@ -133,7 +135,7 @@
       <p><strong>How do I get better at spotting what is abnormal?</strong> Spend time looking at normal. Review a few clean authentication logs, process trees and email headers every week until the patterns become familiar. Abnormal will start to jump out.</p>
       <p><strong>What if I close an alert that turns out to be real?</strong> It happens to everyone eventually. Say so quickly, help with the response and take part in the review. Teams care far more about how you handle a miss than about never missing anything.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Your first year in a SOC is not about knowing everything. It is about building a foundation: a few tools you know well, the core skills of logs, timelines and email analysis, and habits that make your work trustworthy. Get those right and the advanced topics, from threat hunting to detection engineering, build naturally on top. Everyone senior in this field started exactly where you are.</p>
     </div>
 
@@ -145,9 +147,9 @@
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="soc-analyst-starter-kit">
         <li><a href="/writing/from-offensive-security-to-blue-team/" data-ga="related_post_click" data-ga-from="starter" data-ga-to="red-blue">
-          <span class="k">Career</span><h3>From offensive security to blue team</h3><p>What three years of hunting bugs taught me about catching attackers, and what I had to unlearn on the blue side.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Career</span><h3 id="from-offensive-security-to-blue-team">From offensive security to blue team</h3><p>What three years of hunting bugs taught me about catching attackers, and what I had to unlearn on the blue side.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/incident-response-lessons-learned/" data-ga="related_post_click" data-ga-from="starter" data-ga-to="ir">
-          <span class="k">Incident response</span><h3>Incident response lessons from the field</h3><p>The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Incident response</span><h3 id="incident-response-lessons-from-the-field">Incident response lessons from the field</h3><p>The incident response mistakes that cost time or evidence, anonymised, and what I would do differently next time.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>

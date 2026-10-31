@@ -9,6 +9,7 @@
 <meta name="description" content="A practical guide to detection as code: SIEM rules in Git, tests against sample logs, peer review in pull requests and deployment through CI.">
 <meta name="author" content="HarshaVardhan Aakanti">
 <link rel="canonical" href="https://harshaaakanti.github.io/writing/detection-as-code/">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Detection as Code: Git, Tests and CI for SIEM Rules">
 <meta property="og:description" content="Version control, tests, review and CI for detection rules, and why it makes a SOC faster and safer.">
@@ -57,8 +58,9 @@
 <main>
   <article>
     <header class="wrap narrow article-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/writing/">Writing</a></li></ol></nav>
       <span class="eyebrow">Detection engineering</span>
-      <h1>Detection-as-code: treating detection rules like software</h1>
+      <h1 id="detection-as-code-treating-detection-rules-like-software">Detection-as-code: treating detection rules like software</h1>
       <div class="meta"><time datetime="2026-10-20">20 Oct 2026</time><span>5 min read</span><span>HarshaVardhan Aakanti</span></div>
     </header>
 
@@ -72,7 +74,7 @@
 
       <div class="callout">If a rule can change without review, it can break without anyone noticing.</div>
 
-      <h2>What detection-as-code actually means</h2>
+      <h2 id="what-detection-as-code-actually-means">What detection-as-code actually means</h2>
       <p>It comes down to four practices:</p>
       <ul>
         <li><strong>Version control.</strong> Every rule is a file in a Git repository. The repository, not the SIEM console, is the source of truth.</li>
@@ -81,7 +83,7 @@
         <li><strong>Automated deployment.</strong> A CI pipeline validates the rules, runs the tests and pushes approved changes to the SIEM. Nobody edits production rules by hand.</li>
       </ul>
 
-      <h2>What a rule looks like as code</h2>
+      <h2 id="what-a-rule-looks-like-as-code">What a rule looks like as code</h2>
       <p>The format matters less than the habit. Some teams store rules in their SIEM's native query language with a small metadata file next to each one. Others write rules in <a href="https://github.com/SigmaHQ/sigma" target="_blank" rel="noopener">Sigma</a>, an open, vendor-neutral format, and convert them for the SIEM in the pipeline. Here is a simplified example in a Sigma-style layout:</p>
       <pre class="log" style="margin:0 0 1.3rem">title: Encoded PowerShell launched by an Office application
 id: 7c1d2a4e-0000-4000-8000-000000000001
@@ -114,7 +116,7 @@ falsepositives:
 level: high</pre>
       <p>Notice what comes along with the logic: an ID, a description of why the behaviour is suspicious, the ATT&amp;CK technique it maps to, known false positives and a severity. That metadata is what lets a new analyst understand the rule at 3 a.m. without asking anyone.</p>
 
-      <h2>Organising the repository</h2>
+      <h2 id="organising-the-repository">Organising the repository</h2>
       <p>A simple structure works well and scales further than you would expect:</p>
       <ul>
         <li><strong>rules/</strong>, grouped by log source or ATT&amp;CK tactic, one file per rule.</li>
@@ -124,7 +126,7 @@ level: high</pre>
       </ul>
       <p>Keeping exclusions separate is a small decision with a big payoff. It makes every suppression visible in one place, and it lets you review them on a schedule instead of finding them buried inside rule logic years later.</p>
 
-      <h2>Testing detections</h2>
+      <h2 id="testing-detections">Testing detections</h2>
       <p>Testing is where detection-as-code earns its keep. A rule test is simple: feed the rule a set of events and check the result. Each rule should have at least:</p>
       <ul>
         <li><strong>True positive samples,</strong> real or simulated events of the attack behaviour. The rule must match all of them.</li>
@@ -134,7 +136,7 @@ level: high</pre>
       <p>Sample events can come from sanitised production logs, from lab detonations or from attack simulation frameworks. Strip anything sensitive before committing it. Hostnames, usernames and internal addresses do not belong in a test fixture.</p>
       <p>Beyond unit tests, the pipeline can run broader checks: does the query parse? Does it reference fields that actually exist in the log source? Is it fast enough to run on schedule without timing out? Does it duplicate an existing rule?</p>
 
-      <h2>The CI pipeline</h2>
+      <h2 id="the-ci-pipeline">The CI pipeline</h2>
       <p>The pipeline runs on every pull request and again on merge. A typical flow looks like this:</p>
       <div class="flow" role="list">
         <div role="listitem"><b>01 · VALIDATE</b><span>Lint the rule, check required metadata, confirm the query parses and fields exist.</span></div>
@@ -143,7 +145,7 @@ level: high</pre>
       </div>
       <p>A useful addition is a volume check on recent production data. If a change would have produced hundreds of alerts yesterday, the reviewer should know that before approving it, not after the queue fills up.</p>
 
-      <h2>What changes for the team</h2>
+      <h2 id="what-changes-for-the-team">What changes for the team</h2>
       <ul>
         <li><strong>Every rule has a history.</strong> When an alert looks wrong, you can see exactly who changed what and why.</li>
         <li><strong>Rollback is one click.</strong> A bad deployment is reverted like any other code change.</li>
@@ -152,7 +154,7 @@ level: high</pre>
         <li><strong>Silent failures surface.</strong> A test that fails after a log source changes its format tells you the rule is broken before an attacker does.</li>
       </ul>
 
-      <h2>Getting started without boiling the ocean</h2>
+      <h2 id="getting-started-without-boiling-the-ocean">Getting started without boiling the ocean</h2>
       <p>You do not need to migrate every rule on day one. A gradual path works better:</p>
       <ul>
         <li>Export your existing custom rules into a repository as they are. That alone gives you history from today.</li>
@@ -162,7 +164,7 @@ level: high</pre>
         <li>Lock down direct editing in the SIEM console once the pipeline is reliable, with a documented break-glass process for emergencies.</li>
       </ul>
 
-      <h2>Common objections</h2>
+      <h2 id="common-objections">Common objections</h2>
       <p><strong>"It slows us down."</strong> A pull request adds minutes. Debugging an untracked rule change during an incident costs hours. In practice teams ship detections faster once deployment is automated, because nobody has to copy and paste between environments.</p>
       <p><strong>"Our analysts aren't developers."</strong> They do not need to be. Writing a YAML file and opening a pull request is a skill that takes an afternoon to learn, and it is one of the most useful things a junior analyst can pick up.</p>
 
@@ -171,7 +173,7 @@ level: high</pre>
       <p><strong>What about rules that come from a vendor?</strong> Keep them out of your repository but track which ones you have enabled, and put any local exclusions you add to them under the same review process as your own rules.</p>
       <p><strong>How many tests does a rule need?</strong> Start with one positive and one negative sample. Add a regression case every time the rule produces a false positive you fix. Over time the tests grow with the rule's history.</p>
 
-      <h2>The point</h2>
+      <h2 id="the-point">The point</h2>
       <p>Detections are code whether you treat them that way or not. They have logic, dependencies and bugs. Version control, review, tests and a deployment pipeline will not write better detections for you, but they make sure the good ones stay good, the bad changes get caught and every rule can explain itself.</p>
     </div>
 
@@ -183,9 +185,9 @@ level: high</pre>
       <h2 id="related-h">Keep reading</h2>
       <ul class="related-list" data-current="detection-as-code">
         <li><a href="/writing/threat-hunting-walkthrough-llmjacking-aws/" data-ga="related_post_click" data-ga-from="dac" data-ga-to="hunt">
-          <span class="k">Threat hunting</span><h3>A threat hunt walkthrough, from hypothesis to detection</h3><p>One hunt from start to finish: the hypothesis, the CloudTrail queries, what turned up, and the detection that came out of it.</p><span class="more">Read article →</span></a></li>
+          <span class="k">Threat hunting</span><h3 id="a-threat-hunt-walkthrough-from-hypothesis-to-detection">A threat hunt walkthrough, from hypothesis to detection</h3><p>One hunt from start to finish: the hypothesis, the CloudTrail queries, what turned up, and the detection that came out of it.</p><span class="more">Read article →</span></a></li>
         <li><a href="/writing/llm-security-risks-in-the-soc/" data-ga="related_post_click" data-ga-from="dac" data-ga-to="llm-risk">
-          <span class="k">AI security</span><h3>Can LLMs be trusted in the SOC?</h3><p>Prompt injection in alert data, hallucinated IOCs and over-privileged agents, and the guardrails that make LLMs safe to use.</p><span class="more">Read article →</span></a></li>
+          <span class="k">AI security</span><h3 id="can-llms-be-trusted-in-the-soc">Can LLMs be trusted in the SOC?</h3><p>Prompt injection in alert data, hallucinated IOCs and over-privileged agents, and the guardrails that make LLMs safe to use.</p><span class="more">Read article →</span></a></li>
       </ul>
     </section>
   </article>
