@@ -134,3 +134,8 @@ footer .wrap{padding-block:2rem;display:flex;flex-wrap:wrap;justify-content:spac
 .crumbs li+li::before{content:"/";margin-right:.4rem;opacity:.6}
 .crumbs a{color:var(--muted)}
 .crumbs a:hover{color:var(--fg)}
+/* social profile buttons */
+.social{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.social a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;color:var(--soft);background:var(--panel);transition:color .15s,border-color .15s}
+.social a:hover,.social a:focus-visible{color:var(--gold);border-color:var(--gold);text-decoration:none}
+footer .social{flex-basis:100%}
