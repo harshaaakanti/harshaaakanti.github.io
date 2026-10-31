@@ -139,3 +139,15 @@ footer .wrap{padding-block:2rem;display:flex;flex-wrap:wrap;justify-content:spac
 .social a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;color:var(--soft);background:var(--panel);transition:color .15s,border-color .15s}
 .social a:hover,.social a:focus-visible{color:var(--gold);border-color:var(--gold);text-decoration:none}
 footer .social{flex-basis:100%}
+/* "Discuss this article" network picker */
+.discuss{position:relative}
+.discuss summary{list-style:none;cursor:pointer;user-select:none}
+.discuss summary::-webkit-details-marker{display:none}
+.discuss .caret{transition:transform .15s}
+.discuss[open] .caret{transform:rotate(180deg)}
+.discuss-menu{position:absolute;right:0;top:calc(100% + .4rem);z-index:20;min-width:15rem;margin:0;padding:.35rem;list-style:none;background:var(--panel);border:1px solid var(--line);border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.discuss-menu a{display:flex;align-items:center;gap:.75rem;padding:.7rem .8rem;border-radius:3px;color:var(--fg);font:500 .9rem/1.2 var(--f-body)}
+.discuss-menu a svg{flex:none;width:18px;color:var(--soft)}
+.discuss-menu a:hover,.discuss-menu a:focus-visible{background:var(--panel-2);color:var(--gold);text-decoration:none}
+.discuss-menu a:hover svg,.discuss-menu a:focus-visible svg{color:var(--gold)}
+@media (max-width:480px){.discuss{flex:1 1 100%}.discuss summary{width:100%;justify-content:center}.discuss-menu{left:0;right:0}}
