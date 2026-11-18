@@ -6,7 +6,7 @@
    - Visitors where Google's consent message applies (EEA, UK, Switzerland) are only tracked
      with cookies after they allow "store and/or access information on a device" there. */
 (function () {
-  var PROJECT_ID = 'CLARITY_PROJECT_ID';
+  var PROJECT_ID = 'zfjsoeg2o9';
 
   var AI = /(^|\.)(chatgpt\.com|chat\.openai\.com|openai\.com|perplexity\.ai|gemini\.google\.com|bard\.google\.com|copilot\.microsoft\.com|claude\.ai|you\.com|phind\.com|poe\.com|deepseek\.com|meta\.ai|grok\.com|mistral\.ai)$/;
   var SEARCH = /(^|\.)(google\.[a-z.]+|bing\.com|duckduckgo\.com|search\.yahoo\.com|yandex\.[a-z]+|ecosia\.org|search\.brave\.com|baidu\.com)$/;
@@ -55,7 +55,7 @@
   }
 
   function load() {
-    if (!/^[a-z0-9]{6,20}$/i.test(PROJECT_ID) || PROJECT_ID === 'CLARITY_PROJECT_ID') return;
+    if (!/^[a-z0-9]{6,20}$/i.test(PROJECT_ID)) return;
     window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
     var s = document.createElement('script');
     s.async = true;
