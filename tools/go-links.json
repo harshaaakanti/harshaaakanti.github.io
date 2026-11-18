@@ -12,7 +12,8 @@
     "starter":  "/writing/soc-analyst-starter-kit/",
     "ir":       "/writing/incident-response-lessons-learned/",
     "red-blue": "/writing/from-offensive-security-to-blue-team/",
-    "ai-site":  "/writing/how-i-used-ai-to-build-my-portfolio-website/"
+    "ai-site":  "/writing/how-i-used-ai-to-build-my-portfolio-website/",
+    "burnout":  "/writing/soc-analyst-burnout/"
   },
   "platforms": {
     "yt": {"utm_source": "youtube",   "utm_medium": "shorts", "utm_campaign": "soc-shorts"},
