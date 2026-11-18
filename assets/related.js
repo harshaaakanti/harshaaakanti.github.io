@@ -3,6 +3,7 @@
    Add one line here for each new article (newest first). */
 (function () {
   var POSTS = [
+    {"slug": "soc-analyst-burnout", "key": "burnout", "k": "SOC operations", "h": "SOC Analyst Burnout: 7 Signs, 5 Causes and What Actually Helps", "p": "A 7-sign self-check for SOC analyst burnout, the 5 causes research keeps finding, and a 30-day plan for analysts and SOC leads."},
     {"slug": "how-i-used-ai-to-build-my-portfolio-website", "key": "ai-site", "k": "Building with AI", "h": "How I used AI to build and run my portfolio website", "p": "Nine pull requests from an AI assistant: faster fonts, blog search, ads with consent, and the moments a human still had to step in."},
     {"slug": "ai-assisted-soc-alert-triage", "key": "triage", "k": "SOC automation", "h": "Cutting L1 triage from 15 minutes to 30 seconds", "p": "How the enrichment pipeline behind 30-second triage is built, step by step, and an honest list of what it still gets wrong."},
     {"slug": "reduce-siem-false-positives-detection-tuning", "key": "tuning", "k": "Detection engineering", "h": "Tuning detections to remove 35% of false positives", "p": "A practical playbook for cutting false positives from custom SIEM detections by about 35% without losing coverage."},
