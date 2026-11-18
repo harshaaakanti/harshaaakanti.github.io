@@ -3,6 +3,8 @@
    - Text and inputs are masked by Clarity's masking setting (set in the Clarity dashboard).
    - Each session is tagged with where the visit came from (ai / search / social / other,
      plus the referring site and utm_source), so replays can be filtered, e.g. ref_type = ai.
+   - Pages are tagged with page_type, article and topic, and every Google Analytics event
+     the site sends is copied to Clarity as an event of the same name.
    - Visitors where Google's consent message applies (EEA, UK, Switzerland) are only tracked
      with cookies after they allow "store and/or access information on a device" there. */
 (function () {
@@ -34,7 +36,42 @@
     window.clarity('set', 'ref_type', r.type);
     if (r.host) window.clarity('set', 'ref_host', r.host);
     if (r.utm) window.clarity('set', 'utm_source', r.utm);
-    if (r.type === 'ai') window.clarity('event', 'ai_referral');
+    if (r.type === 'ai') { window.clarity('event', 'ai_referral'); window.clarity('upgrade', 'ai_referral'); }
+  }
+
+  // Page context tags: page_type (home / article / writing / about / other), article and topic.
+  function tagPage() {
+    var path = location.pathname;
+    var type = path === '/' ? 'home'
+      : /^\/writing\/[^/]+\/$/.test(path) ? 'article'
+      : path.indexOf('/writing/') === 0 ? 'writing'
+      : path.indexOf('/about/') === 0 ? 'about' : 'other';
+    window.clarity('set', 'page_type', type);
+    if (type !== 'article') return;
+    window.clarity('set', 'article', path.split('/')[2]);
+    var topic = document.querySelector('.article-head .eyebrow');
+    if (topic) window.clarity('set', 'topic', topic.textContent.trim());
+  }
+
+  // Every Google Analytics event the site sends (article_read, discuss_open, discuss_click,
+  // related_post_click, social_click, all_writing_click, ...) is also sent to Clarity,
+  // so replays can be filtered by what the visitor did. A few useful details become tags.
+  var PARAM_TAGS = { network: 'social_network', placement: 'click_placement', article: 'event_article' };
+  function mirrorGaEvents() {
+    var gtag = window.gtag;
+    if (typeof gtag !== 'function' || gtag.__clarity) return;
+    var wrapped = function (cmd, name, params) {
+      try {
+        if (cmd === 'event' && name) {
+          window.clarity('event', name);
+          if (params) for (var k in PARAM_TAGS) if (params[k]) window.clarity('set', PARAM_TAGS[k], String(params[k]));
+          if (name === 'article_read') window.clarity('upgrade', 'article_read');
+        }
+      } catch (e) {}
+      return gtag.apply(this, arguments);
+    };
+    wrapped.__clarity = true;
+    window.gtag = wrapped;
   }
 
   // Pass the visitor's choice from Google's consent message (IAB TCF) to Clarity.
@@ -62,6 +99,8 @@
     s.src = 'https://www.clarity.ms/tag/' + PROJECT_ID;
     document.head.appendChild(s);
     tagSession();
+    tagPage();
+    mirrorGaEvents();
     bridgeConsent(20);
   }
 
