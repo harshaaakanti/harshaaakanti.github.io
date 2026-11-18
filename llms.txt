@@ -11,6 +11,7 @@ All articles are written by HarshaVardhan Aakanti. Case details are anonymised a
 
 ## Articles
 
+- [SOC Analyst Burnout: 7 Signs, 5 Causes and What Actually Helps](https://harshaaakanti.github.io/writing/soc-analyst-burnout/): Spot SOC analyst burnout early with a 7-sign self-check, see the 5 causes SOC surveys keep finding, and get fixes you can start within 30 days. (published 2026-11-18)
 - [How I used AI to build and run my portfolio website](https://harshaaakanti.github.io/writing/how-i-used-ai-to-build-my-portfolio-website/): How I run a plain HTML portfolio with an AI assistant: faster fonts, blog search, AdSense with consent, and the steps that still needed a human. (published 2026-10-24)
 - [Cutting L1 triage from 15 minutes to 30 seconds](https://harshaaakanti.github.io/writing/ai-assisted-soc-alert-triage/): How an AI-assisted enrichment pipeline cut first-pass SOC alert triage from 15 minutes to 30 seconds, how it is built, and what it still gets wrong. (published 2026-10-24)
 - [Tuning detections to remove 35% of false positives](https://harshaaakanti.github.io/writing/reduce-siem-false-positives-detection-tuning/): A detection tuning playbook: how I cut false positives from custom SIEM rules by about 35% without losing coverage, with before and after examples. (published 2026-10-23)
