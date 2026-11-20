@@ -74,6 +74,8 @@
 
   function writeUrl() {
     var p = new URLSearchParams();
+    // Keep campaign tags (utm_*) so analytics that load later still see where the visit came from.
+    params.forEach(function (v, k) { if (k.indexOf('utm_') === 0) p.set(k, v); });
     if (q.value.trim()) p.set('q', q.value.trim());
     if (tagSel.value) p.set('tag', tagSel.value);
     if (yearSel.value) p.set('year', yearSel.value);

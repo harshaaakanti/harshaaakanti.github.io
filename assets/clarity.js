@@ -20,12 +20,16 @@
     try { if (document.referrer) host = new URL(document.referrer).hostname.replace(/^www\./, ''); } catch (e) {}
     var utm = '';
     try { utm = new URLSearchParams(location.search).get('utm_source') || ''; } catch (e) {}
+    // utm_source wins over the referrer: /go/ short links redirect through this site,
+    // so their referrer is our own /go/ page, not the social network.
+    if (host === location.hostname && utm) host = '';
     var type = 'direct';
     if (AI.test(host) || AI_UTM.test(utm)) type = 'ai';
+    else if (/^(li|linkedin|yt|youtube|ig|instagram|x|twitter|facebook|reddit)$/i.test(utm)) type = 'social';
     else if (host && host === location.hostname) type = 'internal';
     else if (SEARCH.test(host)) type = 'search';
-    else if (SOCIAL.test(host) || /^(li|linkedin|yt|youtube|ig|instagram|x|twitter)$/i.test(utm)) type = 'social';
-    else if (host) type = 'other';
+    else if (SOCIAL.test(host)) type = 'social';
+    else if (host || utm) type = 'other';
     return { host: host, utm: utm, type: type };
   }
 
